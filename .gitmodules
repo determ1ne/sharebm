@@ -1,0 +1,4 @@
+[submodule "public/data"]
+	path = public/data
+	url = https://github.com/determ1ne/sharebm-data
+	branch = master

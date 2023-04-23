@@ -1,0 +1,10 @@
+em {
+  color: red;
+}
+
+#header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  transition: height 0.25s ease-in-out;
+}
