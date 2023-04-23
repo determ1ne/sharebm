@@ -1,0 +1,58 @@
+<html><!--
+ Page saved with SingleFile 
+ url: https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/ 
+ saved date: Sun Apr 23 2023 14:57:16 GMT+0800 (China Standard Time)
+--><meta charset=utf-8><title>Unreliable Guide To Hacking The Linux Kernel</title><meta name=generator content="DocBook XSL Stylesheets V1.78.1"><link rel=home href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/index.html title="Unreliable Guide To Hacking The Linux Kernel"><link rel=next href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/introduction.html title=Chapter&nbsp;1.&nbsp;Introduction><link rel=canonical href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/><meta http-equiv=content-security-policy content="default-src 'none'; font-src 'self' data:; img-src 'self' data:; style-src 'unsafe-inline'; media-src 'self' data:; script-src 'unsafe-inline' data:; object-src 'self' data:; frame-src 'self' data:;"><style>img[src="data:,"],source[src="data:,"]{display:none!important}</style><body vlink=#840084 text=black link=#0000FF bgcolor=white alink=#0000FF><div class=navheader><table summary="Navigation header" width=100%><tbody><tr><th colspan=3 align=center>Unreliable Guide To Hacking The Linux Kernel<tr><td width=20% align=left>&nbsp;<th width=60% align=center>&nbsp;<td width=20% align=right>&nbsp;<a accesskey=n href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/introduction.html>Next</a></table><hr></div><div class=book><div class=titlepage><div><div><h1 class=title><a name=lk-hacking-guide></a>Unreliable Guide To Hacking The Linux Kernel</h1></div><div><div class=authorgroup><div class=author><h3 class=author><span class=firstname>Rusty</span> <span class=surname>Russell</span></h3><div class=affiliation><div class=address><p><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code class=email>&lt;<a class=email href=mailto:rusty@rustcorp.com.au>rusty@rustcorp.com.au</a>&gt;</code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></div></div></div></div></div><div><p class=releaseinfo>
+ This is the first release of this document as part of the kernel tarball.
+ </p></div><div><p class=copyright>Copyright © 2005 Rusty Russell</p></div><div><div class=legalnotice><a name=id-1.1.4></a><p>
+ This documentation is free software; you can redistribute
+ it and/or modify it under the terms of the GNU General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later
+ version.
+ <p>
+ This program is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the implied
+ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
+ <p>
+ You should have received a copy of the GNU General Public
+ License along with this program; if not, write to the Free
+ Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ MA 02111-1307 USA
+ <p>
+ For more details see the file COPYING in the source
+ distribution of Linux.
+ </p></div></div></div><hr></div><div class=toc><p><b>Table of Contents</b><dl class=toc><dt><span class=chapter><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/introduction.html>1. Introduction</a></span><dt><span class=chapter><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/basic-players.html>2. The Players</a></span><dd><dl><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/basic-players.html#basics-usercontext>User Context</a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/basics-hardirqs.html>Hardware Interrupts (Hard IRQs)</a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/basics-softirqs.html>Software Interrupt Context: Softirqs and Tasklets</a></span></dl><dt><span class=chapter><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/basic-rules.html>3. Some Basic Rules</a></span><dt><span class=chapter><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/ioctls.html>4. ioctls: Not writing a new system call</a></span><dt><span class=chapter><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/deadlock-recipes.html>5. Recipes for Deadlock</a></span><dt><span class=chapter><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/common-routines.html>6. Common Routines</a></span><dd><dl><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/common-routines.html#routines-printk>
+ <code class=function>printk()</code>
+ <code class=filename>include/linux/kernel.h</code>
+ </a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/routines-copy.html>
+ <code class=function>copy_[to/from]_user()</code>
+ /
+ <code class=function>get_user()</code>
+ /
+ <code class=function>put_user()</code>
+ <code class=filename>include/linux/uaccess.h</code>
+ </a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/routines-kmalloc.html><code class=function>kmalloc()</code>/<code class=function>kfree()</code>
+ <code class=filename>include/linux/slab.h</code></a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/routines-current.html><code class=function>current</code>
+ <code class=filename>include/asm/current.h</code></a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/routines-udelay.html><code class=function>mdelay()</code>/<code class=function>udelay()</code>
+ <code class=filename>include/asm/delay.h</code>
+ <code class=filename>include/linux/delay.h</code>
+ </a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/routines-endian.html><code class=function>cpu_to_be32()</code>/<code class=function>be32_to_cpu()</code>/<code class=function>cpu_to_le32()</code>/<code class=function>le32_to_cpu()</code>
+ <code class=filename>include/asm/byteorder.h</code>
+ </a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/routines-local-irqs.html><code class=function>local_irq_save()</code>/<code class=function>local_irq_restore()</code>
+ <code class=filename>include/linux/irqflags.h</code>
+ </a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/routines-softirqs.html><code class=function>local_bh_disable()</code>/<code class=function>local_bh_enable()</code>
+ <code class=filename>include/linux/interrupt.h</code></a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/routines-processorids.html><code class=function>smp_processor_id</code>()
+ <code class=filename>include/asm/smp.h</code></a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/routines-init.html><span class=type>__init</span>/<span class=type>__exit</span>/<span class=type>__initdata</span>
+ <code class=filename>include/linux/init.h</code></a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/routines-init-again.html><code class=function>__initcall()</code>/<code class=function>module_init()</code>
+ <code class=filename>include/linux/init.h</code></a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/routines-moduleexit.html> <code class=function>module_exit()</code>
+ <code class=filename>include/linux/init.h</code> </a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/routines-module-use-counters.html> <code class=function>try_module_get()</code>/<code class=function>module_put()</code>
+ <code class=filename>include/linux/module.h</code></a></span></dl><dt><span class=chapter><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/queues.html>7. Wait Queues
+ <code class=filename>include/linux/wait.h</code>
+ </a></span><dd><dl><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/queues.html#queue-declaring>Declaring</a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/queue-waitqueue.html>Queuing</a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/queue-waking.html>Waking Up Queued Tasks</a></span></dl><dt><span class=chapter><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/atomic-ops.html>8. Atomic Operations</a></span><dt><span class=chapter><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/symbols.html>9. Symbols</a></span><dd><dl><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/symbols.html#sym-exportsymbols><code class=function>EXPORT_SYMBOL()</code>
+ <code class=filename>include/linux/export.h</code></a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/sym-exportsymbols-gpl.html><code class=function>EXPORT_SYMBOL_GPL()</code>
+ <code class=filename>include/linux/export.h</code></a></span></dl><dt><span class=chapter><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/conventions.html>10. Routines and Conventions</a></span><dd><dl><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/conventions.html#conventions-doublelinkedlist>Double-linked lists
+ <code class=filename>include/linux/list.h</code></a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/convention-returns.html>Return Conventions</a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/conventions-borkedcompile.html>Breaking Compilation</a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/conventions-initialising.html>Initializing structure members</a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/conventions-gnu-extns.html>GNU Extensions</a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/conventions-cplusplus.html>C++</a></span><dt><span class=sect1><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/conventions-ifdef.html>#if</a></span></dl><dt><span class=chapter><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/submitting.html>11. Putting Your Stuff in the Kernel</a></span><dt><span class=chapter><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/cantrips.html>12. Kernel Cantrips</a></span><dt><span class=chapter><a href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/credits.html>13. Thanks</a></span></dl></div></div><div class=navfooter><hr><table summary="Navigation footer" width=100%><tbody><tr><td width=40% align=left>&nbsp;<td width=20% align=center>&nbsp;<td width=40% align=right>&nbsp;<a accesskey=n href=https://archive.kernel.org/oldlinux/htmldocs/kernel-hacking/introduction.html>Next</a><tr><td width=40% valign=top align=left>&nbsp;<td width=20% align=center>&nbsp;<td width=40% valign=top align=right>&nbsp;Chapter&nbsp;1.&nbsp;Introduction</table></div>

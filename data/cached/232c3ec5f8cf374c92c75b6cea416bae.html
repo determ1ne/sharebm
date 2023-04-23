@@ -1,0 +1,1067 @@
+<!DOCTYPE html> <html style lang=en><!--
+ Page saved with SingleFile 
+ url: https://www.muppetlabs.com/~breadbox/txt/mopb.html 
+ saved date: Sun Apr 23 2023 14:42:55 GMT+0800 (China Standard Time)
+--><meta charset=utf-8>
+<title>My Own Private Binary: An Idiosyncratic Introduction to Linux Kernel Modules</title>
+<style>body{font-size:100%;margin:1em;max-width:68em}h1,h2{text-align:center}h3{padding-top:1em}img{margin:0.5em 0 0 5em}code{color:#223;white-space:pre}code .dim{color:#888}.centered{margin:0 auto;text-align:center}.illo{float:right;margin:0.2em 0 0.2em 3em}.cartoon{align:right;font-size:85%;font-style:italic;text-align:right}.cartoon img{border:1px solid black}.note{font-size:85%;margin:0 0 0.3em 20em;max-width:55em}.source{margin:0 6em 1em 4em;border-collapse:collapse}.source .ul1{width:1em;height:0.5em}.source .title{font-family:monospace;padding:0 0.3em;vertical-align:center;width:1%}.source .ul2{border-top:1px solid gray;border-left:1px solid gray;height:0.5em}.source .ur{border-top:1px solid gray;border-right:1px solid gray}.source .main{border-left:1px solid gray;border-right:1px solid gray;border-bottom:1px solid gray;padding:0 2em}.sourcebreak{margin:0 0 0 4em;border-collapse:collapse}.sourcebreak tr td{vertical-align:top;padding:0.5em 0}.sourcebreak tr td:first-child{padding-right:1em}.layout{margin:0 auto;text-align:center;border-collapse:collapse}.layout tr td{border:1px solid black}.layout .lfade{border-right:0}.layout .faded{border-style:dashed;border-width:1px 0}.layout .rfade{border-left:0}.term{background-color:#000;color:#AAA;font-family:monospace;font-size:100%;margin-left:1em;padding:0.5em;white-space:pre;display:table;min-width:72em}.term b{color:#EEE}.term .i{background-color:#AAA;color:#000}</style>
+<link type=image/x-icon rel="shortcut icon" href="data:image/vnd.microsoft.icon;base64,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"><link rel=canonical href=https://www.muppetlabs.com/~breadbox/txt/mopb.html><meta http-equiv=content-security-policy content="default-src 'none'; font-src 'self' data:; img-src 'self' data:; style-src 'unsafe-inline'; media-src 'self' data:; script-src 'unsafe-inline' data:; object-src 'self' data:; frame-src 'self' data:;"><style>img[src="data:,"],source[src="data:,"]{display:none!important}</style></head>
+<body>
+<h1>My Own Private Binary</h1>
+<h2>An Idiosyncratic Introduction to Linux Kernel Modules</h2>
+<hr>
+<h3>How This Began</h3>
+<p>Several years ago, I spent a serious chunk of time figuring out how to
+make really teensy ELF executable files. I started down this path
+because I was annoyed that all of my programs, no matter how short
+they were, never got smaller than 4k or so. I felt that was excessive,
+for C, and so I started looking at what ELF files contained, and how
+much of that actually needed to be there. (And then, after a while,
+how much of it was supposed to be there but could be ripped out
+anyway.) Anyway, I eventually managed to shrink an executable down to
+45 bytes, and I was able to demonstrate that that was the smallest
+possible size an ELF executable could be and still run, under x86
+Linux at least.</p>
+<p><a href=https://www.muppetlabs.com/~breadbox/software/tiny/teensy.html>I wrote up my findings</a>, and
+some people found it interesting, and I got some positive feedback. A
+couple of people naturally pointed out that a shell script that did
+the same thing was much shorter than 45 bytes, to which my response
+was always that a shell script is not an executable, and if you want
+to consider scripts then you need to include the size of the
+interpreter binary along with the script size.</p>
+<p>But then one Internet Random Person™ pointed out that I could
+have made a smaller executable if I had created an <a href=https://www.muppetlabs.com/~breadbox/software/tiny/tiny-aout.asm.txt>aout
+binary</a> instead. If you
+don't know what aout files are, don't worry — that just means you're
+not old. (They are also called "a.out files", but that can be easily
+confused with just a file named "a.out", so I prefer to spell the name
+of the format "aout".) At one time the aout format was widely used on
+Linux, because it was Linux's only binary format. ELF was not
+introduced to Linux until version 2.0 (or more precisely in one of the
+1.x experimental kernels). aout was, and still is, a very simple
+format. It sports a 32-byte header, along with a handful of other
+metadata. Unfortunately the aout format has some annoying limitations
+around dynamic linking, so the fact that Linux switched away from it
+early on is not too surprising. ELF is a much nicer format for a
+mature system. But even though aout binaries were no longer
+fashionable, they still worked.</p>
+<p>However, when I first tried to run the aout executable the person had
+sent me, I got an "Exec format error" message — i.e. this file format
+is not supported. It turned out that a security issue had been
+uncovered at one point that involved aout core dumps. (Did you know?
+Executable file formats come with their own core dump file formats to
+match.) I'm vague on the details, but as a result most distros started
+compiling their kernels without aout support. The format was
+considered to be pretty thoroughly deprecated by that time, so it
+wasn't seen as a difficult call to make.</p>
+<p>(Support for aout is still present in the kernel source tree, however,
+and you're free to include it if you compile your own kernel. At the
+time of this writing there was talk about removing it entirely, but
+apparently some architectures still have a use for it. Some people
+have suggested removing support just for aout core dumps, but in the
+absence of a pressing issue it remains as it is. The whole
+conversation is a good reminder that adding a feature to software is
+often far easier than removing it.)</p>
+<p>But so I did compile a kernel with aout support, and verify that the
+35-byte binary did in fact work. And the whole thing got me to
+wondering, <em>how many executable file formats does Linux actually
+support?</em> I looked into it, and I found out that the way in which
+Linux handles binary formats is a dynamic feature of the kernel. That
+is to say, it's relatively straightforward to add support for a new
+format, without having to recompile your kernel, or reboot your
+machine even.</p>
+<p><div class=note>An aside: I want to clarify that I'm not talking about the
+"miscellaneous binary format" feature of the kernel. That feature
+allows you to dynamically designate an interpreter to be run when the
+user attempts to execute certain files. Thus, for example, running a
+file ending in <code>.jar</code> can automatically invoke the JavaVM for you.
+That feature is controlled via the <code>/proc/sys/fs/binfmt_misc</code> system,
+so check out the <code>binfmt_misc</code> documentation if you're curious.
+Interpreters are not what I'm interested in here, though; I'm focusing
+exclusively on actual binary files.</div>
+<p></p>
+<p>What I was secretly hoping to discover was if a "flat" format existed
+— that is, a binary file format with no metadata at all. Obviously,
+such a format would allow for even smaller executables. No such format
+was supported, however. But that isn't too surprising, as such a
+format isn't very useful. Where there is no metadata, there are no
+features, no options. A flat format is a one-size-fits-all approach,
+and that's not what most people need from their binary format
+standards.</p>
+<p><div class=note>In order to avoid confusion, I should mention here that the Linux
+kernel does have support for a format that is <em>called</em> "flat", but
+this is just the name of the uClinux native binary format. It is
+actually larger and more featureful than the aout format from which it
+was derived. Presumably this format is flat along some other
+dimension.</div>
+<p></p>
+<p>Despite such shortcomings, it so happens that there is a flat,
+metadata-less executable file format that is well supported on another
+popular OS. If you haven't already guessed, I'm referring to the
+<code>.com</code> file format that MS Windows supports, having inherited it from
+MS-DOS, which in turn inherited it from CP/M. It is truly flat. When
+you run a <code>.com</code> file, the OS loads the whole thing in memory at a
+standard address and runs it. And this approach works okay on a
+single-tasking system like MS-DOS. (Or rather, on the MS-DOS-like
+subsystem that MS Windows presents to a running <code>.com</code> file.) In that
+environment, the OS can say, "Here you go, program. You have 640
+kilobytes of RAM. Have fun!"</p>
+<p>And so naturally I asked myself, <em>what would it take to get a <code>.com</code>
+file format working under Linux?</em> I mean yes it would not be terribly
+useful … but it would let me make the smallest executable file ever.
+Sure, I could never hope to get support for such a format added to the
+actual Linux kernel. But I <em>could</em> add it to my own kernel, where at
+least I would be able to use it myself. I could be living in my own
+private binary.</p>
+<h3>Kernel Modules</h3>
+<p>Linux makes it easy to do this sort of thing via <em>loadable kernel
+modules</em>. What exactly is a kernel module? Basically, a kernel module
+is an object file built for the kernel that just hasn't been linked
+yet. The trick is that you can link one into a running kernel without
+having to stop the kernel or even pull over. (This isn't quite the
+same thing as what is generally meant by "dynamic linking", though it
+is very similar in spirit.) Kernel modules mainly allow users to
+manage support for various kinds of hardware dynamically, but they
+allow you to add support for all kinds of things without having to
+recompile the kernel. So let's take a moment and look at how to create
+a kernel module.</p>
+<p>Before we get started, we need to make sure that the kernel's header
+files are present on the machine. For users on Debian-based systems,
+this is typically done with the shell command:</p>
+<p><div class=note><code>uname(1)</code> is used to ensure that you're
+getting the files that match the specific version of the kernel you're
+currently running.</div>
+<div class=term>$ <b>sudo apt install linux-headers-$(uname -r)</b><br>Reading package lists... Done<br>Building dependency tree<br>Reading state information... Done<br>The following NEW packages will be installed:<br>  linux-headers-4.15.0-156-generic<br>0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.<br>        <b>⋮</b><br>/etc/kernel/header_postinst.d/dkms:<br> * dkms: running auto installation service for kernel 4.15.0-156-generic<br>   ...done.</div><p></p>
+<p>This will install a directory under <code>/usr/src</code> corresponding to the
+your current kernel version. (In fact, you may find that you already
+have several directories located there, one for every version of the
+kernel that you can currently boot into.) This directory contains,
+among other things, all of the header files that we'll need to build
+kernel modules.</p>
+<p>We'll start with a very simple one, predictably named "hello kernel".</p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>hello.c</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code>#include &lt;linux/module.h&gt;
+#include &lt;linux/kernel.h&gt;
+#include &lt;linux/init.h&gt;
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("me");
+MODULE_DESCRIPTION("hello kernel");
+MODULE_VERSION("0.1");
+
+static int __init hello_init(void)
+{
+    printk(KERN_INFO "hello, kernel\n");
+    return 0;
+}
+
+static void __exit hello_exit(void)
+{
+    printk(KERN_INFO "goodbye, kernel\n");
+}
+
+module_init(hello_init);
+module_exit(hello_exit);
+</code></pre></table><p></p>
+<p>A quick rundown of what is being done here:</p>
+<p><table class=sourcebreak><tbody><tr><td><pre><code>#include &lt;linux/module.h&gt;
+#include &lt;linux/kernel.h&gt;
+#include &lt;linux/init.h&gt;
+</code></pre><td>The header file <code>linux/module.h</code> defines the
+<code>MODULE_*</code> macros, <code>linux/init.h</code> defines the <code>__init</code> and <code>__exit</code>
+macros, and <code>linux/kernel.h</code> gives us the <code>printk()</code> function.<tr><td><pre><code>MODULE_LICENSE("GPL");
+MODULE_AUTHOR("me");
+MODULE_DESCRIPTION("hello kernel");
+MODULE_VERSION("0.1");
+</code></pre><td>These macros just insert some metadata into
+our module. You can view this information via the <code>modprobe(1)</code>
+utility. Among other things, the kernel keeps track of the presence of
+non-free software.<p>⋮</p><tr><td><pre><code>module_init(hello_init);
+module_exit(hello_exit);
+</code></pre><td>And then there are two special functions,
+the <em>init</em> function and the <em>exit</em> function. The <code>module_init()</code> and
+<code>module_exit()</code> macros mark which function is which, so the kernel can
+find them. The first one gets called at the time the module is inserted
+into a running kernel, and the second one gets called when the module
+is being removed from the kernel.</table><p></p>
+<p>The kernel folks have made it extremely easy to build kernel modules.
+Here's the makefile:</p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>Makefile</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code>obj-m = hello.o
+kver = $(shell uname -r)
+all:
+	make -C /lib/modules/$(kver)/build/ M=$(PWD) modules
+clean:
+	make -C /lib/modules/$(kver)/build M=$(PWD) clean
+</code></pre></table><p></p>
+<p>All you do is put the name of your object file on the first line,
+and everything else is done for you.</p>
+<p>So, if we run <code>make(1)</code>, a bunch of stuff will get created:</p>
+<p><div class=term>$ <b>ls</b><br>hello.c  Makefile<br>$ <b>make</b><br>make -C /lib/modules/4.15.0-156-generic/build/ M=/home/breadbox/km/hello modules<br>make[1]: Entering directory '/usr/src/linux-headers-4.15.0-156-generic'<br>  CC [M]  /home/breadbox/km/hello/hello.o<br>  Building modules, stage 2.<br>  MODPOST 1 modules<br>  CC      /home/breadbox/km/hello/hello.mod.o<br>  LD [M]  /home/breadbox/km/hello/hello.ko<br>make[1]: Leaving directory '/usr/src/linux-headers-4.15.0-156-generic'<br>$ <b>ls</b><br>hello.c   hello.mod.c  hello.o   modules.order<br>hello.ko  hello.mod.o  Makefile  Module.symvers</div><p></p>
+<p>There's <code>hello.o</code>, a regular object file, but we also have an object
+file named <code>hello.ko</code>. This is the kernel module. We have become
+kernel developers.</p>
+<p>The <code>insmod(8)</code> tool can be used to load this module into the running
+kernel:</p>
+<p><div class=term>$ <b>sudo insmod ./hello.ko</b><br>$ <b>lsmod | head</b><br>Module                  Size  Used by<br>hello                  16384  0<br>nls_iso8859_1          16384  0<br>uas                    24576  0<br>usb_storage            69632  1 uas<br>btrfs                1155072  0<br>zstd_compress         163840  1 btrfs<br>xor                    24576  1 btrfs<br>raid6_pq              114688  1 btrfs<br>ufs                    77824  0</div><p></p>
+<p>When we type <code>lsmod(8)</code> to list the active modules, it's right there at
+the top, as the most recently added module.</p>
+<p>The actual effect of this module is simply to output some log
+messages. We can use <code>dmesg(8)</code> to verify that our module really did
+load:</p>
+<p><div class=term>$ <b>dmesg | tail -n4</b><br>[2419362.787463] e1000e: eth3 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: Rx/Tx<br>[2448541.604799] EXT4-fs (sda1): re-mounted. Opts: (null)<br>[2474408.687761] usb 5-1: USB disconnect, device number 14<br>[2478627.755269] hello, kernel</div><p></p>
+<p>We can then use <code>rmmod(8)</code> to remove the module from the running
+kernel whenever we want:</p>
+<p><div class=term>$ <b>sudo rmmod hello</b><br>$ <b>dmesg | tail -n4</b><br>[2448541.604799] EXT4-fs (sda1): re-mounted. Opts: (null)<br>[2474408.687761] usb 5-1: USB disconnect, device number 14<br>[2478627.755269] hello, kernel<br>[2478639.607702] goodbye, kernel</div><p></p>
+<p>So that's all there is to writing kernel modules.</p>
+<p>No, of course that's not true. Writing a useful kernel module does
+require some specialized knowledge. For example, kernel modules don't
+have access to <code>libc</code>, since <code>libc</code> itself is mainly an abstraction
+layer that sits atop the kernel. That said, much of the functionality
+you're used to having easy access to as a C programmer is also present
+in the kernel, though sometimes in slightly different dress.
+(Filesystems, for example, are one bit of detail that we as Unix
+programmers often ignore, but are obviously a major concern inside the
+kernel.)</p>
+<p>But don't let all that deter you. The rewards of writing kernel
+modules are worth the inconveniences. There is a great deal that you
+can do inside a kernel module that is simply impossible outside of it.
+Remember, Linux is a monolithic kernel — which means that once you
+are loaded, you have the keys to the kingdom. Your lowly, nonstandard
+kernel module can do <em>anything</em>. Of course, this is a double-edged
+sword, because that also means that you can <em>accidentally</em> do
+anything. As it happens, a lot of bad things are actually pretty hard
+to do accidentally, such as mucking up some other process's code.
+You'd need to jump through a few hoops just to get a pointer to
+someone else's memory. But some unfortunate things are remarkably easy
+to do. For example, one time while working on my kernel module, I
+accidentally put <code>--i</code> instead of <code>++i</code> in the iterator of my <code>for</code>
+loop. I inserted that module into my kernel to test it, and my mouse
+cursor disappeared, and my music stopped playing … and then it was
+time to reboot my computer.</p>
+<p>But that sort of risk shouldn't scare you away. With modern journaling
+file systems and the like, you're never going to be at any real risk
+of losing data. (I mean, unless you're actually working on
+implementing a filesystem, in which case please back up your files
+regularly.) I encourage you to experiment and try out your own ideas
+for kernel modules.</p>
+<h3>Binary File Formats Under Linux</h3>
+<p>All right, but what exactly does this have to do with making smaller
+executables? Well, as I mentioned earlier, the kernel's list of
+accepted binary file formats is dynamic. Specifically, this means that
+there are functions inside the kernel that allow code to add and
+remove binary formats from this list.</p>
+<p>This is done by registering a set of callback functions, and these
+callbacks get invoked when the kernel is asked to execute a binary
+file. The kernel invokes the callbacks on this list, and the first one
+that claims to recognize the file takes responsibility for getting it
+properly loaded into memory. If nobody on the list accepts it, then as
+a last resort the kernel will attempt to treat it as a shell script
+without a shebang line. And if that doesn't fly, then you'll get that
+"Exec format error" message described above. <div class=note>Interesting side note:
+The kernel decides whether or not to try to parse a file as a shell
+script by whether or not it contains a line break in the first few
+hundred bytes — specifically if it contains a line break before the
+first zero byte. Thus a data file that just happens to have a "<code>\n</code>"
+near the top can produce some odd-looking error messages if you try to
+execute it.</div>
+<p></p>
+<p>So we find ourselves in possession of the following facts:</p>
+<ol>
+<li>The Linux kernel can dynamically introduce new binary file formats.</li>
+<li>Kernel modules can be added to a running kernel.</li>
+<li>Being able to run flat binaries would be really neat.</li>
+</ol>
+<p>Obviously, there is only one possible response to this situation.</p>
+<h3>Version 0.1: Look Ma, No Metadata</h3>
+<p>We wish to write a kernel module that implements a flat, metadata-less
+binary file format for Linux. So, that's what I did.</p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>comfile.c</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code>#include &lt;linux/module.h&gt;
+#include &lt;linux/kernel.h&gt;
+#include &lt;linux/init.h&gt;
+
+#include &lt;linux/fs.h&gt;
+#include &lt;linux/mm.h&gt;
+#include &lt;linux/mman.h&gt;
+#include &lt;linux/string.h&gt;
+#include &lt;linux/errno.h&gt;
+#include &lt;linux/binfmts.h&gt;
+#include &lt;linux/personality.h&gt;
+#include &lt;linux/processor.h&gt;
+#include &lt;linux/ptrace.h&gt;
+#include &lt;linux/sched/task_stack.h&gt;
+
+MODULE_DESCRIPTION("Linux command executable files");
+MODULE_AUTHOR("Brian Raiter &lt;breadbox@muppetlabs.com&gt;");
+MODULE_VERSION("0.1");
+MODULE_LICENSE("GPL");
+
+/* Given an address or size, round up to the next page boundary.
+ */
+#define pagealign(n)  (((n) + PAGE_SIZE - 1) &amp; PAGE_MASK)
+
+static struct linux_binfmt comfile_fmt;
+
+static int load_comfile_binary(struct linux_binprm *lbp)
+{
+    long const loadaddr = 0x00010000;
+
+    char const *ext;
+    loff_t filesize;
+    int r;
+
+    ext = strrchr(lbp-&gt;filename, '.');
+    if (!ext || strcmp(ext, ".com"))
+        return -ENOEXEC;
+
+    r = flush_old_exec(lbp);
+    if (r)
+        return r;
+    set_personality(PER_LINUX);
+    set_binfmt(&amp;comfile_fmt);
+    setup_new_exec(lbp);
+
+    filesize = generic_file_llseek(lbp-&gt;file, 0, SEEK_END);
+    generic_file_llseek(lbp-&gt;file, 0, SEEK_SET);
+
+    current-&gt;mm-&gt;start_code = loadaddr;
+    current-&gt;mm-&gt;end_code = current-&gt;mm-&gt;start_code + filesize;
+
+    r = setup_arg_pages(lbp, STACK_TOP, EXSTACK_DEFAULT);
+    if (r)
+        return r;
+
+    r = vm_mmap(lbp-&gt;file, loadaddr, filesize,
+                PROT_READ | PROT_WRITE | PROT_EXEC,
+                MAP_FIXED | MAP_PRIVATE, 0);
+    if (r &lt; 0)
+        return r;
+
+    install_exec_creds(lbp);
+    /*finalize_exec(lbp);*/
+    start_thread(current_pt_regs(), loadaddr,
+                 current-&gt;mm-&gt;start_stack);
+    return 0;
+}
+
+static struct linux_binfmt comfile_fmt = {
+    .module = THIS_MODULE,
+    .load_binary = load_comfile_binary,
+    .load_shlib = NULL,
+    .core_dump = NULL,
+    .min_coredump = 0
+};
+
+static int __init comfile_start(void)
+{
+    register_binfmt(&amp;comfile_fmt);
+    return 0;
+}
+
+static void __exit comfile_end(void)
+{
+    unregister_binfmt(&amp;comfile_fmt);
+}
+
+module_init(comfile_start);
+module_exit(comfile_end);
+</code></pre></table><p></p>
+<p>Unlike our first kernel module, this one is actually doing some
+interesting work. So let's take the time to walk through this code and
+understand what's going on.</p>
+<p><table class=sourcebreak><tbody><tr><td><pre><code>static int __init comfile_start(void)
+{
+    register_binfmt(&amp;comfile_fmt);
+    return 0;
+}
+
+static void __exit comfile_end(void)
+{
+    unregister_binfmt(&amp;comfile_fmt);
+}
+</code></pre><td>Our very-short init function just calls
+<code>register_binfmt()</code>, and likewise our exit function calls
+<code>unregister_binfmt()</code>. As you have probably already guessed, these are
+the functions that add and remove support for a new binary format. The
+argument to both functions is a pointer to a static struct of type
+<code>linux_binfmt</code>.<tr><td><pre><code>static struct linux_binfmt comfile_fmt = {
+    .module = THIS_MODULE,
+    .load_binary = load_comfile_binary,
+    .load_shlib = NULL,
+    .core_dump = NULL,
+    .min_coredump = 0
+};
+</code></pre><td>The important fields of the <code>linux_binfmt</code>
+struct are three function pointers. They provide callbacks for loading
+an executable, loading a shared-object library, and dumping a core
+file. Thankfully, those latter two features are optional, so we can
+leave them unimplemented, and just provide the first callback.<tr><td><pre><code>static int load_comfile_binary(struct linux_binprm *lbp)
+</code></pre><td>And this function is where all the work gets
+done. It will be invoked by the kernel every time someone is
+attempting to execute one of our files, and its purpose is to get the
+file's contents into memory and running. The function is passed a
+single argument, <code>lbp</code>, which is a pointer to a struct called
+<code>linux_binprm</code> that contains our actual arguments. It has a dozen or
+so fields that summarize everything the kernel knows about our file.
+The callback returns an <code>int</code> value, as is typical for internal kernel
+functions. If all goes well, the return value is zero. When an error
+occurs, the function should return a negative number that corresponds
+to a negated <code>errno</code> value.</table><p></p>
+<p>Recall how a program is launched under Unix: first the <code>fork</code> system
+call is used to duplicate the process, and then the <code>execve</code>
+system call replaces the process's current program with a new one.
+<div class=note>Note that the <code>fork</code> system call is not quite the same thing as the
+<code>fork()</code> function supplied by <code>libc</code>, although the latter is just a
+thin wrapper around the former. Similarly, <code>libc</code> provides a family of
+seven different "exec" functions, but they all ultimately invoke the
+<code>execve</code> system call.</div>
+<p></p>
+<p>The nice thing about this system is that we never have to worry about
+actually creating a process from scratch. That's done for us. Every
+program's process is a copy of pid 1, duplicated through a succession
+of <code>fork</code>s. Our callback will instead be invoked during the <code>execve</code>
+system call. In effect, when the kernel calls us, it is asking, "Hey,
+I've got a file here. The user claims it's an executable binary, but
+it's not an ELF file. Do <em>you</em> want to deal with it?" Every callback
+function that has been registered with <code>register_binfmt()</code> gets
+called, in order, going down the list, until someone takes
+responsibility for the file.</p>
+<p>So that's the first thing our callback function needs to do: it needs
+to decide whether or not this is actually a <code>.com</code> file. Which raises
+the obvious question: how do we even do that? Most binary formats
+looks for a magic-number identifier in the first few bytes of metadata
+— but we have no metadata. So then what?</p>
+<p>Well, how does MS Windows identify <code>.com</code> files? Answer: it looks at
+the filename. When you try to execute a file with a name ending in
+"<code>.com</code>", that's all MS Windows really cares about. "Oh, you're a
+<code>.com</code> file, are you? Okay: here's 640k and an interrupt table. Call
+me when you're done."</p>
+<p><table class=sourcebreak><tbody><tr><td><pre><code>    ext = strrchr(lbp-&gt;filename, '.');
+    if (!ext || strcmp(ext, ".com"))
+        return -ENOEXEC;
+</code></pre><td>So that's what we do, too. One of the
+fields of the <code>linux_binprm</code> struct is the filename, so we examine it,
+and if there's no "<code>.com</code>" extension, then we return negative
+<code>ENOEXEC</code>, the <code>errno</code> equivalent to our "Exec format error" message.
+This error normally means "this is not an executable", but in this
+particular context, it really means "this is not one of my
+executables." When the kernel gets this return value, it will just
+continue trying other formats. If all the callbacks return this value,
+then <code>ENOEXEC</code> will actually get returned from <code>execve</code> itself, which
+<code>libc</code> will then package up and store in <code>errno</code>. But, if it does end
+in "<code>.com</code>", then our callback continues.</table><p></p>
+<p>All we have to do now is load and run the file. No pressure, right?
+Luckily for us, the kernel provides lots of functions that will do
+almost all of the heavy lifting for us. We just need to oversee the
+whole process. So let's quickly run down the sequence of events.</p>
+<p><table class=sourcebreak><tbody><tr><td><pre><code>    r = flush_old_exec(lbp);
+    if (r)
+        return r;
+</code></pre><td>The very first thing we do is call
+<code>flush_old_exec()</code>. Boom. Nearly everything that was specific to the
+old process is now gone. The process is now an empty salt flat,
+extending featurelessly to the horizon. Wait, that's a little bleak.
+Instead, let's imagine it as a fallow field, ready for planting. Note
+also that if a non-zero value is returned, then a failure occurred, in
+which case we dutifully pass the negated <code>errno</code> value back up the
+call chain.<tr><td><pre><code>    set_personality(PER_LINUX);
+</code></pre><td>Personality is an obscure feature that
+allows certain behaviors of the kernel to vary on a per-process basis.
+For whatever reason, it's not reset by the flush.<tr><td><pre><code>    set_binfmt(&amp;comfile_fmt);
+</code></pre><td>The <code>set_binfmt()</code> function explicitly claims
+this binary as one of our own. As far as I can tell, this is only used
+for debugging purposes.<tr><td><pre><code>    setup_new_exec(lbp);
+</code></pre><td><code>setup_new_exec()</code> initializes the process to
+some basic defaults, and allows for any architecture-specific
+initializations to occur.<tr><td><pre><code>    filesize = generic_file_llseek(lbp-&gt;file, 0, SEEK_END);
+    generic_file_llseek(lbp-&gt;file, 0, SEEK_SET);
+</code></pre><td>At this point we are now cleared to start
+defining our memory image, which is currently very empty. So the first
+thing we want to do is determine how big the file is, since that's
+also the size of program. Inside the kernel, we don't have the
+familiar file descriptors. Instead, we have file objects. As you might
+expect, the <code>linux_binprm</code> struct includes an already-opened file
+object, and the kernel function <code>generic_file_llseek()</code> works pretty
+much the same as <code>libc</code>'s more familiar <code>lseek()</code> function for
+retrieving the file size.<tr><td><pre><code>    current-&gt;mm-&gt;start_code = loadaddr;
+    current-&gt;mm-&gt;end_code = current-&gt;mm-&gt;start_code + filesize;
+</code></pre><td><code>current</code> is a global variable that points
+to the current task. A task is like a process or a thread, except that
+instead of being a numerical identifier, it's the actual thing itself
+— the noumenon, the <em>ding-an-sich</em>. It's a struct with literally
+hundreds of fields. It's, like, really big. Pretty much anything you
+might want to know about a process is in this thing, somewhere. One of
+those things is the task's memory manager. And right now, the memory
+manager is eager to know where the process's component parts are going
+to be located. Since our format is so simple — all we have is a blob
+of code — we mainly need to provide a valid load address. There
+aren't too many requirements for this address. It just needs to be
+page-aligned, well away from the stack, and not zero. I selected
+<code>0x10000</code> as our load address because there wasn't a particular reason
+not to.<tr><td><pre><code>    r = setup_arg_pages(lbp, STACK_TOP, EXSTACK_DEFAULT);
+    if (r)
+        return r;
+</code></pre><td>We aren't setting up anything else that
+processes typically contain, because we're just so down to earth like
+that, so we can go straight to calling <code>setup_arg_pages()</code>. This
+function finalizes the location and access permissions of the stack.<tr><td><pre><code>    r = vm_mmap(lbp-&gt;file, loadaddr, filesize,
+                PROT_READ | PROT_WRITE | PROT_EXEC,
+                MAP_FIXED | MAP_PRIVATE, 0);
+    if (r &lt; 0)
+        return r;
+</code></pre><td>And now that that's official, let's
+actually load something into memory. Yes folks, it's finally time to
+call <code>vm_mmap()</code>. This function is basically identical to <code>libc</code>'s
+<code>mmap()</code>, and is the natural way to load a file into (page-aligned)
+memory. Of course, normally when you call <code>mmap()</code> with a fixed load
+address you need to handle the case where that address is already in
+use. We don't need to worry about that here, as nothing is currently
+in use. We're requesting that the memory be marked as readable,
+writeable, and executable. Traditionally, programs will place their
+code into non-writeable memory, and store variable data in memory that
+is writeable but not executable. And that's definitely the safer way
+to do things, but we can't be bothered with all that. After all, the
+<code>.com</code> format hearkens back to a simpler time, when RAM was RAM, and
+didn't come with geegaws like protection. Staying true to this
+approach is a way of honoring our roots. Also, without metadata it's
+basically impossible to know which parts of the file are code and
+which are data, so we don't really have a choice, but it sounds better
+if we claim it's because of our heritage.<tr><td><pre><code>    install_exec_creds(lbp);
+</code></pre><td>We now call <code>install_exec_creds()</code>, which
+will set up the correct user ID vs effective user ID, in case it needs
+to be changed.<tr><td><pre><code>    /*finalize_exec(lbp);*/
+</code></pre><td>The function <code>finalize_exec()</code> does something
+with the stack's <code>rlimit</code> value. I'm a little vague on its purpose
+because it's somewhat new. In fact, it doesn't even exist on my
+kernel version, which is why it's commented out in my code. If you're
+running a 5.x kernel or later, feel free to restore it.<tr><td><pre><code>    start_thread(current_pt_regs(), loadaddr,
+                 current-&gt;mm-&gt;start_stack);
+    return 0;
+</code></pre><td>And then, at last, we call
+<code>start_thread()</code>. This is the big one. We pass it a pointer to a
+struct that contains the process's current register values, a pointer
+to the top of the stack, and most importantly, the address for the
+instruction pointer (which for us is the same thing as the load
+address). The process is now ready to be scheduled. And, since we have
+indeed made it this far, we return zero to indicate success.</table><p></p>
+<p>Phew. It's definitely not trivial, the process of setting up a
+process. But as I said, all of the real work is done by other code.</p>
+<p><div class=term>$ <b>make</b><br>make -C /lib/modules/4.15.0-156-generic/build/ M=/home/breadbox/km/com modules<br>make[1]: Entering directory '/usr/src/linux-headers-4.15.0-156-generic'<br>  CC [M]  /home/breadbox/km/com/comfile.o<br>  Building modules, stage 2.<br>  MODPOST 1 modules<br>  CC      /home/breadbox/km/com/comfile.mod.o<br>  LD [M]  /home/breadbox/km/com/comfile.ko<br>make[1]: Leaving directory '/usr/src/linux-headers-4.15.0-156-generic'<br>$ <b>sudo insmod comfile.ko</b><br>$ <b>lsmod | head -n3</b><br>Module                  Size  Used by<br>comfile                16384  0<br>nls_iso8859_1          16384  0</div><p></p>
+<p>Now in order to actually put this kernel module to the test, we'll
+need a program to execute. Specifically, we need to create a binary
+file in our flat, metadata-less format. One that actually does
+something.</p>
+<p>The down side of creating our own binary file format is that none of
+our usual tools know anything about it. If we want to build a program
+in this format, we're on our own here. But, our format is so utterly
+simple that this shouldn't be hard. However, it does mean that we'll
+need to use assembly code.</p>
+<p>As is traditional, our minimal test program will be one that exits
+with a status code of 42. In order to make a system call under 64-bit
+Linux, we need to set <code>rax</code> to the system call number, and <code>rdi</code> to
+the (first) argument, and then use the <code>syscall</code> instruction. The
+<code>exit</code> system call is assigned the ID number 60, so this should be all
+we need:</p>
+<p><div class=term>$ <b>cat &gt;tiny.asm</b><br>BITS 64<br>	mov	rax, 60<br>	mov	rdi, 42<br>	syscall<br>$ <b>nasm -f bin -o tiny.com tiny.asm</b><br>$ <b>chmod +x tiny.com</b><br>$ <b>wc -c tiny.com</b><br>     12 tiny.com</div><p></p>
+<p>The <code>bin</code> format is <code>nasm</code>'s name for its flat binary output format,
+so what we get in our output file is nothing more than the assembly
+code that we specified.</p>
+<p><div class=term>$ <b>./tiny.com</b><br>$ <b>echo $?</b><br>42</div><p></p>
+<p>Our project has borne fruit. Behold: it works, and it's twelve bytes
+in size. And we can verify that it is, in fact, our kernel module that
+is actually loading and running it:</p>
+<p><div class=term>$ <b>sudo rmmod comfile</b><br>$ <b>./tiny.com</b><br>bash: ./tiny.com: cannot execute binary file: Exec format error<br>$ <b>sudo insmod ./comfile.ko</b><br>$ <b>./tiny.com</b><br>$ <b>echo $?</b><br>42</div><p></p>
+<p>This delightfully unadulterated binary file is almost a quarter the
+size of the smallest possible ELF executable, and less than a third
+the size of the aout executable that inspired this (admittedly
+ridiculous) exploration. And with zero bytes of overhead in our file
+format, we can be confident that no binary using a format that
+includes metadata can touch this one.</p>
+<p>Although, of course, if we're going to start crowing about the size,
+then we should probably go ahead and use the smallest possible
+instructions.</p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>tiny.asm</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code>BITS 64
+	push	42
+	pop	rdi
+	mov	al, 60
+	syscall
+</code></pre></table><p></p>
+<p><code>rdi</code> can be initialized in only three bytes of machine code, and
+<code>rax</code> can be initialized in even less, thanks to the fact that it is
+pre-initialized to zero.</p>
+<p><div class=term>$ <b>nasm -f bin -o tiny.com tiny.asm</b><br>$ <b>chmod +x tiny.com</b><br>$ <b>./tiny.com</b><br>$ <b>echo $?</b><br>42<br>$ <b>wc -c tiny.com</b><br>      7 tiny.com</div><p></p>
+<p>Seven bytes. <em>Seven!</em></p>
+<p>To be clear, this is very much a nonstandard binary, and therefore it
+in no way invalidates or supplants my 45-byte ELF executable (or the
+aout executable). But it does make me very happy.</p>
+<h3>Further Testing of the Waters</h3>
+<p>We should try writing a few more programs, just to verify that our
+kernel module really does work in general. Let's try a proper
+hello-world program.</p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>hello.asm</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code>BITS 64
+
+	org	0x10000
+
+	mov	eax, 1			; rax = 1: write system call
+	mov	edi, eax		; rdi = 1: stdout file desc
+	lea	rsi, [rel str]		; rsi = pointer to string
+	mov	edx, strlen		; rdx = string length
+	syscall				; call write(rdi, rsi, rdx)
+	mov	eax, 60			; rax = 60: exit system call
+	xor	edi, edi		; rdi = 0: exit code
+	syscall				; call exit(rdi)
+
+str:	db	'hello, world', 10
+strlen equ $ - str
+</code></pre></table><p></p>
+<p>More assembly, yes, but it's very straightforward for assembly. It
+compiles down to a 43-byte binary, and it does work:</p>
+<p><div class=term>$ <b>nasm -f bin -o hello.com hello.asm</b><br>$ <b>chmod +x hello.com</b><br>$ <b>./hello.com</b><br>hello, world<br>$ <b>wc -c hello.com</b><br>     43 hello.com</div><p></p>
+<p>By using shorter instructions, we could reduce this program to 35
+bytes, perhaps less. I will leave that as an exercise to the
+interested reader.</p>
+<p>As long as our programs only use a fixed amount of data, we can
+allocate space by just adding it to our binary file. If we need to
+allocate space dynamically, however, then that's going to be a
+problem. Why? Because our processes don't have a heap. Why not?
+Because we didn't set one up in our loader. Oops.</p>
+<h3>Version 0.2: On Having a Heap</h3>
+<p>Let's address this oversight by going back to our kernel module and
+adding a few more lines of code. It's actually pretty easy. We just
+need to let the memory manager know what we want.</p>
+<p>Most programs use a memory layout that looks something like this:</p>
+<table class=layout>
+<tbody><tr>
+<td style=min-width:8em>Code</td>
+<td style=min-width:8em>Data</td>
+<td style=min-width:7em class=lfade>Heap</td>
+<td style=min-width:2em class=faded></td>
+<td style=min-width:7em class=rfade>Stack</td>
+</tr>
+</table>
+<p>The sections are frequently broken up for the purpose of providing
+different access rights. Code sections are marked executable but not
+writeable, and the other sections are marked writeable and not
+executable. The code and data sections have a constant size, while the
+heap and the stack change in size as the program runs, with the heap
+growing upwards and the stack growing downwards. (And if they meet in
+the middle, then you've run out of memory — although on a 64-bit
+machine you'll run out of physical RAM long before that point.) For
+historical reasons, the end of the heap is called the <em>program break</em>,
+and the <code>brk</code> system call can be used to move it around. <div class=note>If we're
+being pedantic, we should note that access permissions are not
+attached to the memory itself, but rather to the addresses. Different
+address ranges can be mapped to the same physical memory but with
+different permissions. This is not a distinction we need to worry
+about here.</div>
+<p></p>
+<p>So let's tell the memory manager that we want our processes to enjoy
+the benefits of a heap:</p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>comfile.c</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code><span class=dim>    filesize = generic_file_llseek(lbp-&gt;file, 0, SEEK_END);</span>
+<span class=dim>    generic_file_llseek(lbp-&gt;file, 0, SEEK_SET);</span>
+    allocsize = PAGE_ALIGN(filesize);
+<span class=dim></span>
+<span class=dim>    current-&gt;mm-&gt;start_code = loadaddr;</span>
+<span class=dim>    current-&gt;mm-&gt;end_code = current-&gt;mm-&gt;start_code + filesize;</span>
+    current-&gt;mm-&gt;start_data = current-&gt;mm-&gt;end_code;
+    current-&gt;mm-&gt;end_data = loadaddr + allocsize;
+    current-&gt;mm-&gt;start_brk = current-&gt;mm-&gt;end_data;
+    current-&gt;mm-&gt;brk = current-&gt;mm-&gt;start_brk;
+<span class=dim></span>
+<span class=dim>    r = setup_arg_pages(lbp, STACK_TOP, EXSTACK_DEFAULT);</span>
+<span class=dim>    if (r)</span>
+<span class=dim>        return r;</span>
+</code></pre></table><p></p>
+<p>The only measurement we have available to us is the file size, which
+we're using to determine the size of the code section. The
+<code>PAGE_ALIGN</code> macro rounds a value up to the next page boundary. Since
+we can't allocate a fractional number of memory pages, we can take
+whatever padding we'll get at the page's end, and let that be our data
+section. Our heap will then be located directly following this. It
+starts off with a size of zero, which the program can then expand as
+desired.</p>
+<p>(There's no reason why we couldn't define a larger data section for
+our binaries, by the way. We would just need to hard-code a size for
+it. Perhaps, to stay true to the MS-DOS roots of our format, we should
+allocate a data section of 640k. But this requires making a second
+<code>vm_mmap()</code> call to allocate non-file-backed memory, so I've chosen to
+punt on that modification for the moment.)</p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>comfile.c</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code><span class=dim>    r = vm_mmap(lbp-&gt;file, loadaddr, filesize,</span>
+<span class=dim>                PROT_READ | PROT_WRITE | PROT_EXEC,</span>
+<span class=dim>                MAP_FIXED | MAP_PRIVATE, 0);</span>
+<span class=dim>    if (r &lt; 0)</span>
+<span class=dim>        return r;</span>
+    r = vm_brk(current-&gt;mm-&gt;start_brk, 0);
+    if (r &lt; 0)
+        return r;
+</code></pre></table><p></p>
+<p>After memory has actually been allocated, we will set the process's
+program break to its starting value. Our process should now have a
+functional heap that the program can dynamically modify.</p>
+<p>In order to test this new feature, I've written an implementation of
+<code>cat</code>, one that reads all of standard input into memory before doing
+any output. It's not an interesting program beyond being a basic
+demonstration of low-level heap allocation, so I won't go into it. If
+you're curious, you can see the source here:
+<a href=https://www.muppetlabs.com/~breadbox/txt/mopb/cat.asm.txt><code>cat.asm</code></a>. For now, we'll just note that it
+succeeds at allocating memory at runtime:</p>
+<p><div class=note>On my machine, <code>/etc/mailcap</code> is a text file well over
+64k in size.</div>
+<div class=term>$ <b>nasm -f bin -o cat.com cat.asm</b><br>$ <b>chmod +x cat.com</b><br>$ <b>./cat.com &lt;/etc/mailcap | cmp - /etc/mailcap</b><br>$ <b>wc -c cat.com</b><br>    100 cat.com</div><p></p>
+<p>This version of <code>cat</code> is not really a <code>cat</code> utility, however, as it
+can only read from standard input. A proper <code>cat</code> program — and,
+indeed, a majority of proper programs — will need to be able to open
+files named on the command line. So how do we access the command-line
+arguments?</p>
+<p>Frankly, we can't, at least not as things stand. You see, when an ELF
+binary runs, it has values for <code>argc</code>, <code>argv</code>, and <code>envp</code> placed at
+the top of its stack. Surprise! Those values are put there by the
+loader. Yes, this issue is also the responsiblity of our kernel
+module.</p>
+<p>So let's add support for this, too.</p>
+<h3>Version 0.3: Leaving Room for Arguments</h3>
+<p>To be sure, the strings that make up the command-line arguments are
+present in our process's image — specifically, they're sitting in
+memory just above the stack. (Which means, given that the stack is
+currently empty, that the <code>rsp</code> register currently points to them.)
+But this is no neat array of string pointers. It's just a lot of
+strings, one after the other. A string of strings, if you will. Worse,
+the environment variables come immediately after the command-line
+arguments, without any indication of where one set ends and the other
+begins. So they aren't really usable, as they stand.</p>
+<p>At the absolute least, a program needs to know how many of the strings
+are in each set. Well, it turns out that our kernel module has exactly
+that information. In the <code>linux_binprm</code> struct (provided via the
+argument to our callback function, remember) there are two fields
+named <code>argc</code> and <code>envc</code>. These are the number of command-line
+arguments and environment variables, respectively. In theory, if we
+transmit these two values to the running program, that would be enough
+for the code to safely access the data. Of course, if that's all we
+did, then every <code>.com</code> program would need to trawl through their
+string of strings, to determine where each item begins and ends. We
+could just accept that as a fact of life for programmers using our
+format, but since we're doing this work anyway, why not take the time
+to do it right? We should provide our processes with <code>argv</code> and <code>envp</code>
+arguments — neat arrays of pointers to the strings in question —
+like all the cool binary formats do.</p>
+<p>Since these two arrays don't currently exist, we'll need to reserve
+some memory for them. It may feel intuitive to tap our newly-minted
+heap, but for this it actually makes more sense to just take it off
+the top of the stack. (In fact, these arrays can be seen as forming a
+sort of zeroth stack frame.) The top of the stack is at the top of
+memory, which is stored in the <code>linux_binprm</code> struct in the
+intuitively-named field <code>p</code>. So we want to build arrays in the memory
+immediately preceding this address, and then move the top of the stack
+down to precede our arrays.</p>
+<p>Note, however, that we cannot use familiar functions like <code>strlen()</code>
+to walk through these strings. Why? Because the memory holding these
+strings isn't owned by the kernel; it belongs to the process itself.
+So far, we've only been dealing with addresses in the process's
+memory. We haven't tried to access that memory, except through other
+functions, such as <code>vm_mmap()</code>. It can thus be easy to forget that
+kernel memory and user memory exist in two different address spaces
+(not to mention different permission rings). The kernel is allowed to
+access user memory, of course, but it needs to be intentional about
+it, and this requires some extra work.</p>
+<p>Within our kernel module, we use the <code>__user</code> annotation to declare
+pointers to user memory. And instead of using the <code>*</code> operator to
+dereference such pointers, we have two special macros: <code>get_user()</code> to
+read through a user pointer, and <code>put_user()</code> to write through one.
+And the kernel provides a handful of convenient functions, like
+<code>strnlen_user()</code>, that will operate on strings stored in user space.</p>
+<p>Once we have gone through the strings and populated our two arrays,
+we'll still need to communicate the values for <code>argc</code>, <code>argv</code>, and
+<code>envp</code> to the program. The usual way to do this is to place them on
+the stack, allowing the program to access them at its convenience.</p>
+<p>So let's add all this to our kernel module. We'll start by defining a
+separate function to handle the work of walking through the strings
+and building the two arrays.</p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>comfile.c</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code>/* Given argc + envc strings above the top of the stack, construct the
+ * argv and envp arrays in the memory preceding, and then push argc,
+ * argv, and envp onto the stack. Return the new stack top address.
+ */
+static unsigned long make_arrays(struct linux_binprm const *lbp)
+{
+    void* __user *sp;
+    char* __user *argv;
+    char* __user *envp;
+    char __user *p;
+    int i;
+
+    p = (char __user *)lbp-&gt;p;
+    envp = (char* __user *)ALIGN(lbp-&gt;p, sizeof *envp);
+    envp = envp - (lbp-&gt;envc + 1);
+    argv = envp - (lbp-&gt;argc + 1);
+    sp = (void* __user *)argv - 3;
+
+    current-&gt;mm-&gt;arg_start = (unsigned long)p;
+    for (i = 0 ; i &lt; lbp-&gt;argc ; ++i) {
+        put_user(p, argv + i);
+        p += strnlen_user(p, MAX_ARG_STRLEN);
+    }
+    put_user(NULL, argv + i);
+    current-&gt;mm-&gt;arg_end = (unsigned long)p;
+
+    current-&gt;mm-&gt;env_start = (unsigned long)p;
+    for (i = 0 ; i &lt; lbp-&gt;envc ; ++i) {
+        put_user(p, envp + i);
+        p += strnlen_user(p, MAX_ARG_STRLEN);
+    }
+    put_user(NULL, envp + i);
+    current-&gt;mm-&gt;env_end = (unsigned long)p;
+
+    put_user((void*)(unsigned long)lbp-&gt;argc, sp);
+    put_user(argv, sp + 1);
+    put_user(envp, sp + 2);
+
+    return (unsigned long)sp;
+}
+</code></pre></table><p></p>
+<p>There's a fair bit of casting in this function because the kernel
+tends to store user addresses as <code>unsigned long</code> values. This may
+sound counterproductive, but it's somewhat natural given that kernel
+code rarely dereferences such addresses. But our function wants to
+work with them as pointer types, in order to take advantage of pointer
+arithmetic. (We also have to cast <code>argc</code> into a pointer while we
+briefly pretend that the stack is an array.)</p>
+<p>With this function in our code, we just need to use it at the
+appropriate time, after the stack has been created and its address has
+been finalized.</p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>comfile.c</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code><span class=dim>    r = setup_arg_pages(lbp, STACK_TOP, EXSTACK_DEFAULT);</span>
+<span class=dim>    if (r)</span>
+<span class=dim>        return r;</span>
+    current-&gt;mm-&gt;start_stack = make_arrays(lbp);
+</code></pre></table><p></p>
+<p>In order to verify that all of these changes do in fact work, we can
+write a couple more program, <a href=https://www.muppetlabs.com/~breadbox/txt/mopb/echo.asm.txt><code>echo.asm</code></a> and
+<a href=https://www.muppetlabs.com/~breadbox/txt/mopb/env.asm.txt><code>env.asm</code></a>. Again, they aren't particularly
+interesting in the details, so I won't dissect them here. But if
+you're at all familiar with reading x86 assembly, they should be
+relatively straightforward to understand.</p>
+<p><div class=term>$ <b>nasm -f bin -o echo.com echo.asm</b><br>$ <b>chmod +x echo.com</b><br>$ <b>./echo.com foo bar baz</b><br>foo bar baz<br>$ <b>./echo.com</b><br><br>$ <b>wc -c echo.com</b><br>     84 echo.com</div><p></p>
+<h3>Take This Discussion of Practicality Outside</h3>
+<p>At this point, we have created a binary format for the Linux kernel
+that functions without metadata. Writing code for it is a bit of a
+pain, though — we have to write everything in assembly, and none of
+the standard tools work with our format.</p>
+<p>Well, it so happens that there is something that we can do about that.
+With some investment of effort, we can coax our familiar tools into
+generating <code>.com</code> binaries, allowing us to use things like C compilers
+once more. There's a number of steps to the whole journey, however, so
+I've decided to put the gory details in a separate appendix, and I
+encourage you to peruse it if you are at all curious.</p>
+<p><a href=https://www.muppetlabs.com/~breadbox/txt/mopb-app.html>Click here to check out the appendix.</a></p>
+<p>But for now, I don't want to be sidelined by meandering distractions
+like "usability". The focus of this essay, after all, is using kernel
+modules to let us produce working binaries that are <em>really teensy</em>.
+We have already produced a valid seven-byte executable file, and it is
+undeniably a thing of beauty. But a question immediately presents
+itself.</p>
+<p>Could it be even smaller?</p>
+<p>Well, we can't shrink the program itself down any further. It's as
+small as it can get. But maybe we could get by with a simpler program,
+if we changed the binary loader a little bit. Nothing too ridiculous,
+mind you. But I'm thinking … what if our binaries could just
+automatically exit when they came to the end, instead of forcing the
+programmer to use the <code>exit</code> system call? I mean, a majority of
+programming languages work that way, right? If a Python program makes
+it to the end of the file, it just quietly exits. Could we make our
+binaries do that as well?</p>
+<h3>Version 0.?: Hello, I Must Be Going</h3>
+<p>We absolutely can. What we would need to do is append a few extra
+bytes of machine code to the end of our file image. This code will
+only be executed if the program would have crashed otherwise, so
+one could argue that this is a purely beneficial modification to our
+binary format.</p>
+<p>However, it does mean that the code size will now be larger than the
+file size. This alters the addresses of how we lay out memory, which
+could mess with programmers' assumptions, given that programs are
+generally written in low-level assembly.</p>
+<p>Rather than calling this a minor feature upgrade, I therefore feel
+compelled to fork the code base at this point, and give this file
+format a new name, so as not to muddy the until-now transparent ABI of
+the <code>.com</code> format.</p>
+<p><img class=illo src="data:image/jpeg;base64,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" alt width=190 height=250>Originally, I was planning on calling this new, extended
+format "dot-e-com", or "dot-x-com" or something equally trite.
+However, after some reflection, I decided to be less boring and
+instead I called it the "keep-calm" (and carry on) format. This name
+refers naturally to the fact that you no longer have to fret about
+setting up mandatory instructions for exiting. Instead you can just
+carry on, right up to the end of the program.</p>
+<p>However, I decided I didn't like using <code>.calm</code> as a filename
+extension. It was too easy to confuse with <code>.com</code> when said aloud. So
+I instead chose to adopt the Unicode character for a crown as the
+extension: <code>.</code>♚. (This is U+265A, one of the Unicode chess piece
+glyphs.)</p>
+<p>Now I realize that some people may find it a bit controversial to use
+a non-ASCII symbol in a filename extension. But hey, the Unicode
+Consortium has gone to a great deal of trouble to standardize
+thousands upon thousands of glyphs, and we programmers continue to
+draw upon the same 100 or so characters for our symbols, keywords, and
+filenames. All these others are just sitting around, neglected. We
+should start using them more. I mean, why not? Heck, put emojis in
+your filenames. I'm not your dad. <div class=note>Alan, if you're reading this: I
+forbid you to put emojis in your filenames.</div>
+<p></p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>calmfile.c</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code><span class=dim>    ext = strrchr(lbp-&gt;filename, '.');</span>
+    <s>if (!ext || strcmp(ext, ".com"))</s>
+    if (!ext || strcmp(ext, ".♚"))
+<span class=dim>        return -ENOEXEC;</span>
+</code></pre></table><p></p>
+<p>(If for whatever reason you don't trust your compiler to properly
+handle Unicode characters, you can instead assume a UTF-8 environment
+and write the second argument to <code>strcmp()</code> as <code>".\342\231\232"</code>.)</p>
+<p>Anyway. The machine code that we want to append to the program can
+be squeezed into eight bytes:</p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>epilog.lst</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code>00000000 31FF           xor	edi, edi
+00000002 678D473C       lea	eax, [edi + 60]
+00000006 0F05           syscall
+</code></pre></table><p></p>
+<p>That's convenient, as it means that we can stuff it all into a <code>long</code>
+value, which can be stored in user memory with a simple <code>put_user()</code>.
+The next change we need to make is to reserve an extra eight bytes in
+the layout that we report to the memory manager.</p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>calmfile.c</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code><span class=dim>    filesize = generic_file_llseek(lbp-&gt;file, 0, SEEK_END);</span>
+<span class=dim>    generic_file_llseek(lbp-&gt;file, 0, SEEK_SET);</span>
+    <s>allocsize = PAGE_ALIGN(filesize);</s>
+    codesize = filesize + 8;
+    allocsize = PAGE_ALIGN(codesize);
+<span class=dim></span>
+<span class=dim>    current-&gt;mm-&gt;start_code = loadaddr;</span>
+    <s>current-&gt;mm-&gt;end_code = current-&gt;mm-&gt;start_code + filesize;</s>
+    current-&gt;mm-&gt;end_code = current-&gt;mm-&gt;start_code + codesize;
+<span class=dim>    current-&gt;mm-&gt;start_data = current-&gt;mm-&gt;end_code;</span>
+<span class=dim>    current-&gt;mm-&gt;end_data = loadaddr + allocsize;</span>
+<span class=dim>    current-&gt;mm-&gt;start_brk = current-&gt;mm-&gt;end_data;</span>
+<span class=dim>    current-&gt;mm-&gt;brk = current-&gt;mm-&gt;start_brk;</span>
+</code></pre></table><p></p>
+<p>We will still use <code>filesize</code> when we call <code>vm_mmap()</code>, since we can
+only map what's in the file. And here we hit a subtle point. Due to
+the fact that memory is always mapped in page-sized chunks, we
+typically get more memory than we ask for from <code>vm_mmap()</code> — but not
+always. If the binary file happens to be exactly (or nearly exactly)
+page-sized, then there won't be enough memory mapped for our
+eight-byte epilog. So, we need to check for this edge case, and when
+it happens we need to call <code>vm_mmap()</code> a second time to reserve a page
+of anonymous memory immediately following:</p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>calmfile.c</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code><span class=dim>    r = vm_mmap(lbp-&gt;file, loadaddr, filesize,</span>
+<span class=dim>                PROT_READ | PROT_WRITE | PROT_EXEC,</span>
+<span class=dim>                MAP_FIXED | MAP_PRIVATE, 0);</span>
+<span class=dim>    if (r &lt; 0)</span>
+<span class=dim>        return r;</span>
+    if (allocsize != PAGE_ALIGN(filesize)) {
+        r = vm_mmap(NULL, loadaddr + PAGE_ALIGN(filesize), PAGE_SIZE,
+                    PROT_READ | PROT_WRITE | PROT_EXEC,
+                    MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS, 0);
+        if (r &lt; 0)
+            return r;
+    }
+<span class=dim>    r = vm_brk(current-&gt;mm-&gt;start_brk, 0);</span>
+<span class=dim>    if (r &lt; 0)</span>
+<span class=dim>        return r;</span>
+
+    put_user(0x050F3C478D67FF31, (long __user *)(loadaddr + filesize));
+</code></pre></table><p></p>
+<p>And of course that ridiculous-looking 64-bit magic number at the
+bottom is the little-endian encoding of our epilog.</p>
+<p><div class=note>We don't need to <code>rmmod</code> the previous module
+this time, since we are defining a new binary format. The two can be
+active simultaneously without interfering with each other.</div>
+<div class=term>$ <b>make</b><br>make -C /lib/modules/4.15.0-156-generic/build/ M=/home/breadbox/km/calm modules<br>make[1]: Entering directory '/usr/src/linux-headers-4.15.0-156-generic'<br>  CC [M]  /home/breadbox/km/calm/calmfile.o<br>  Building modules, stage 2.<br>  MODPOST 1 modules<br>  CC      /home/breadbox/km/calm/calmfile.mod.o<br>  LD [M]  /home/breadbox/km/calm/calmfile.ko<br>make[1]: Leaving directory '/usr/src/linux-headers-4.15.0-156-generic'<br>$ <b>sudo insmod ./calmfile.ko</b><br>$ <b>lsmod | head -n3</b><br>Module                  Size  Used by<br>calmfile               16384  0<br>comfile                16384  0</div><p></p>
+<p>Of the programs we've currently written, <a href=https://www.muppetlabs.com/~breadbox/txt/mopb/cat.asm.txt><code>cat.asm</code></a>
+is the best candidate to benefit from this change, having twelve
+bytes' worth of machine code that can be omitted with the new format:</p>
+<p><div class=note>To enter a Unicode glyph at the terminal, type
+Ctrl-Shift-U, followed by the codepoint number, and then Enter. The
+sequence for the crown symbol is thus Ctrl-Shift-U 2 6 5 A Enter.</div>
+<div class=term>$ <b>cp -i cat.com cat.♚</b><br>$ <b>./cat.♚ &lt;hello.txt</b><br>hello, world<br>$ <b>truncate -s -12 cat.♚</b><br>$ <b>wc -c cat.♚</b><br>     88 cat.♚<br>$ <b>./cat.♚ &lt;hello.txt</b><br>hello, world<br>$ <b>echo $?</b><br>0</div><p></p>
+<p>The only down side of this change is that the exit status no longer
+reports error values from read failures.</p>
+<p>No, that's not true. The other, more signficant, down side of this
+change is that this new feature can't be used to improve the size of
+our seven-byte executable! That program still has to explicitly exit,
+in order to exit with a non-zero status. (And the non-zero exit is how
+we can be certain that the program actually ran, and wasn't, say,
+mistakenly handled as a do-nothing shell script.)</p>
+<p>Well, it so happens that I have the perfect answer to both of these
+concerns.</p>
+<h3>Version 0.??: This Is Not At All a Ridiculous Idea</h3>
+<p>The way to address these issues is to modify our epilog so that
+instead of always returning zero, it uses the value at the top of the
+stack as the exit code. Additionally (and here's the brilliant part),
+the loader will set up our stack so that it starts out with a zero
+entry at the top. That way, if the program is well-behaved and pops
+everything off the stack that it pushed, it will automatically exit
+with a successful zero status — but it can also quit prematurely at
+any time, leaving an error code on the stack that will be
+automatically transmitted to the user. This is clearly an improvement
+to our original idea, right? I think it makes perfect sense, and isn't
+at all contrived.</p>
+<p>Fortunately, this new epilog will still fit snugly into eight bytes:</p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>epilog.lst</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code>00000000 5F             pop	rdi
+00000001 B83C000000     mov	eax, 60
+00000006 0F05           syscall
+</code></pre></table><p></p>
+<p>This improvement requires only a three-line change to our kernel
+module:</p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>calmfile.c</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code><span class=dim>    r = vm_brk(current-&gt;mm-&gt;start_brk, 0);</span>
+<span class=dim>    if (r &lt; 0)</span>
+<span class=dim>        return r;</span>
+<span class=dim></span>
+    <s>put_user(0x050F3C478D67FF31, (long __user *)(loadaddr + filesize));</s>
+    put_user(0x050F0000003CB85F, (long __user *)(loadaddr + filesize));
+    current-&gt;mm-&gt;start_stack -= sizeof(void*);
+    put_user(0, (long __user *)current-&gt;mm-&gt;start_stack);
+<span class=dim></span>
+<span class=dim>    install_exec_creds(lbp);</span>
+</code></pre></table><p></p>
+<p><div class=term>$ <b>make</b><br>make -C /lib/modules/4.15.0-156-generic/build/ M=/home/breadbox/km/calm modules<br>make[1]: Entering directory '/usr/src/linux-headers-4.15.0-156-generic'<br>  CC [M]  /home/breadbox/km/calm/calmfile.o<br>  Building modules, stage 2.<br>  MODPOST 1 modules<br>  CC      /home/breadbox/km/calm/calmfile.mod.o<br>  LD [M]  /home/breadbox/km/calm/calmfile.ko<br>make[1]: Leaving directory '/usr/src/linux-headers-4.15.0-156-generic'<br>$ <b>sudo rmmod ./calmfile.ko</b><br>$ <b>sudo insmod ./calmfile.ko</b></div><p></p>
+<p>Once we've verified that it builds, let's revisit our current-best
+seven-byte binary. That same program should work just as well in our
+new format:</p>
+<p><div class=term>$ <b>./cat.♚ &lt;tiny.asm</b><br>BITS 64<br>	push	42<br>	pop	rdi<br>	mov	al, 60<br>	syscall<br>$ <b>nasm -f bin -o tiny.♚ tiny.asm</b><br>$ <b>chmod +x tiny.♚</b><br>$ <b>./tiny.♚</b><br>$ <b>echo $?</b><br>42<br>$ <b>wc -c tiny.♚</b><br>      7 tiny.♚</div><p></p>
+<p>But it should also work if we push the number 42 onto the stack
+and just leave it there. In other words, if the program just
+consists of the <code>push</code> instruction.</p>
+<p><div class=term>$ <b>truncate -s 2 tiny.♚</b><br>$ <b>./tiny.♚</b><br>$ <b>echo $?</b><br>42<br>$ <b>wc -c tiny.♚</b><br>      2 tiny.♚</div><p></p>
+<p>Two bytes. <em>Two bytes!</em> Our program is the size of a single
+machine-language instruction! This is the limit! There's no way to
+make a working program any smaller than that!</p>
+<p>Well, I mean. I don't think there is. That is, obviously, there does
+exist a number that is less than two, so <em>in theory</em> it could be
+smaller, but how would that even be possible? Like, if there was a
+one-byte instruction for storing an arbitrary value on the stack, then
+maybe. But there isn't. The only other realistic possibility I can
+think of would be if the binary file could make use of some metadata
+to request a particular value to place on the stack initially, instead
+of having it be a hard-coded zero value. But there is no metadata in
+our file! That's the whole point of the format, right? I mean, of
+course, all files have some metadata; that's just the nature of
+filesystems. You could argue that the filename itself counts as
+metadata. I mean, we are basically using the filename as metadata
+already, I suppose. We're looking at the extension to determine the
+file type. So you could in theory potentially maybe argue that, just
+for example, using the character immediately preceding the extension
+would also be valid metadata, and that could be defined to specify
+optional behavior, like the default stack value for example …</p>
+<p><table class=source><tbody><tr><td class=ul1><td class=title rowspan=2><i>calmfile.c</i><td><tr><td class=ul2><td class=ur><tr><td class=main colspan=3><pre><code><span class=dim>    put_user(0x050F0000003CB85F, (long __user *)(loadaddr + filesize));</span>
+<span class=dim>    current-&gt;mm-&gt;start_stack -= sizeof(void*);</span>
+    <s>put_user(0, (long __user *)current-&gt;mm-&gt;start_stack);</s>
+    put_user(ext[-1], (long __user *)current-&gt;mm-&gt;start_stack);
+</code></pre></table><p></p>
+<p><code>ext</code> is the pointer to the filename's extension, that we initialized
+way back at the top of the function, so <code>ext[-1]</code> is the character
+directly to the left of the dot. Don't get me wrong; I fully realize
+that this is indefensibly contrived — especially since, as it turns
+out, the ASCII character for 42 is the asterisk. That's quite an
+inconvenient character to have in a filename.</p>
+<p>But having come this far, how can I <em>not</em> continue?</p>
+<p><div class=term>$ <b>make</b><br>make -C /lib/modules/4.15.0-156-generic/build/ M=/home/breadbox/km/calm modules<br>make[1]: Entering directory '/usr/src/linux-headers-4.15.0-156-generic'<br>  CC [M]  /home/breadbox/km/calm/calmfile.o<br>  Building modules, stage 2.<br>  MODPOST 1 modules<br>  CC      /home/breadbox/km/calm/calmfile.mod.o<br>  LD [M]  /home/breadbox/km/calm/calmfile.ko<br>make[1]: Leaving directory '/usr/src/linux-headers-4.15.0-156-generic'<br>$ <b>sudo rmmod calmfile</b><br>$ <b>sudo insmod ./calmfile.ko</b><br>$ <b>touch '*.♚'</b><br>$ <b>chmod +x '*.♚'</b><br>$ <b>'./*.♚'</b><br>$ <b>echo $?</b><br>42</div><p></p>
+<p>Okay.</p>
+<p><div class=term><span style=font-size:200%>$ wc -c '*.♚'</span><br><span style=font-size:200%>      0 *.♚</span></div><p></p>
+<p>Beat <strong>that</strong>, Internet Random Person™!</p>
+<div class=cartoon><img src="data:image/jpeg;base64,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"><br>Illustration
+of author surveying the fruits of his labor by Bomberanian</div>
+<p><a href=https://www.muppetlabs.com/~breadbox/txt/mopb-app.html>(appendix)</a></p>
+<p><hr><p></p>
+<small><a href=http://www.muppetlabs.com/~breadbox/txt/>Texts</a></small>
+<br>
+<small><a href=http://www.muppetlabs.com/~breadbox/>Brian Raiter</a></small>
