@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> <html><!--
+ Page saved with SingleFile 
+ url: https://utcc.utoronto.ca/~cks/space/blog/unix/V7WhyItMattersSoMuch 
+ saved date: Sun Apr 23 2023 14:49:23 GMT+0800 (China Standard Time)
+--><meta charset=utf-8>
+<title> Chris's Wiki :: blog/unix/V7WhyItMattersSoMuch </title>
+<style>#header{font-size:small}div.left{float:left}div.right{float:right}#header>div{margin-bottom:1em}.clear{clear:both}#documentbody{clear:both}table.wikitable{border-collapse:collapse}.wikitable td{border:1px;border-style:solid;padding:.3em;vertical-align:top}.wikitext>h1,.wikitext>h2,.wikitext>h3,.wikitext>h4{margin-top:0.5em}.titlehack h1,.titlehack h2,.titlehack h3,.titlehack h4{margin-bottom:0.1em}.wikitext table.horizontal{vertical-align:top;border-collapse:collapse}.wikitext table.horizontal td{text-align:left;border-style:dotted;border-width:0 0 1px 0}.wikitext table.horizontal td+td{padding-left:1em}.wikitext table.horizontal tr{border-bottom:1px dotted}.comment .wikitext pre{white-space:pre-wrap}table.blogtitles{border-collapse:collapse;margin-bottom:.5em}.blogtitles td{vertical-align:top;text-align:left;padding-bottom:.5em}.blogtitles td+td{padding-left:0.5em}#atomfeeds{font-size:small;margin-top:.4em;margin-bottom:.4em}.wttitle{text-align:center}.wtblog{display:table;max-width:60em;margin-left:auto;margin-right:auto}.maintext{display:table-cell;width:76%;padding:1px 1.5em 1px 1px}.sidebar{display:table-cell;width:24%;padding:1px 1px 1px 0.5em;border-left:1px dotted}@media only screen and (max-width:45em),only screen and (max-device-width:45em),only screen and (orientation:portrait) and (max-device-width:50em){.wtblog{display:block}.maintext{display:block;width:auto;padding:0 1em 0 0.25em}.sidebar{display:block;width:auto;font-size:80%;padding:0 0 0.5em 4px;border-style:dotted none none;border-width:1px 0 0;margin-top:10px}.sidesearch{display:none}}@media screen and (max-width:25em){.right{display:none}.wttitle{display:none}}@media only screen and (min-device-width:768px) and (max-device-width:1024px) and (-webkit-min-device-pixel-ratio:1) and (orientation:portrait){.maintext{font-size:120%;padding:0 1em 0 1em}.sidebar{font-size:100%}}@media only screen and (min-device-width:768px) and (max-device-width:1024px) and (-webkit-min-device-pixel-ratio:1) and (orientation:landscape){.maintext,.sidebar{font-size:90%}}</style>
+<meta name=viewport content="width=device-width">
+<link rel=alternate type=application/atom+xml href=https://utcc.utoronto.ca/~cks/space/blog/?atom>
+<link type=image/x-icon rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEACABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAACoZQMA8+rXANu/hQDElTcA6tm6AP/75gDRrGIAuYAMAOLNoQDKnkkA7uHKAL2HKADfx5UA1bVzAPfw5AD///8AsHEDAOfVrwC6ghkAzaNTALN3CADXuXwA/Pr3AO3fxADfx5kA+vfwANSxbQDHmkMA28CLALyGHwDx59QA9e7fAM+oXQD+/fUA69y+AOHLnADo17UAtYQZALJ0AwDAjTIA9/fmALN3EwDexI4A1rh5ANSybACtawMAzqVKAL6JJQD/9+8Av4wpAPDlzgDjz6MAxZRCALV5CgDjzZ8A2byCAMmdSADm3r0ArWMAALiAEwDOpl8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPRkaBCAiDREMKhEaIjwKPT0WDhkMGAIcKiocDA4OGT09PT09Fh8EOy0vMx89PT09PT09FhY9PQIAIz09KD09PT09GSIGKD0sABE9EQ0BFj09PRkKJB8zJhAdCjIXHj09PQ43CzESAysHNzELMScIGT0EMSYQOD0eJj0ZLxA1NAEhCR0vDR8BEykrKBcGEjEGPSQjKh8TFCoMNxQaHzcRFz0MAh8bEAkkExYSFAYOFTMhFx8IAwkXGiYBNhsDCh4XPRY9HxkXHzsxMh8fHxk9Fj09PT0XDQoTEiQYHD09PT09PT09AQQONhMeChc9PT09PT09PT09PT0FPT09PT09PYABAACAAQAA8A8AAOY3AADCIQAAwAMAAIAAAACCQAAAAAAAAIAAAACAAAAAAAAAAKACAADwDwAA8A8AAP9/AAA="><link rel=canonical href=https://utcc.utoronto.ca/~cks/space/blog/unix/V7WhyItMattersSoMuch><meta http-equiv=content-security-policy content="default-src 'none'; font-src 'self' data:; img-src 'self' data:; style-src 'unsafe-inline'; media-src 'self' data:; script-src 'unsafe-inline' data:; object-src 'self' data:; frame-src 'self' data:;"><style>img[src="data:,"],source[src="data:,"]{display:none!important}</style></head>
+<body>
+<div id=header>
+ <div class=left><a href=https://utcc.utoronto.ca/~cks/>Chris Siebenmann</a> ::
+<span class=breadcrumbs><a href=https://utcc.utoronto.ca/~cks/space/>CSpace</a> »
+ <a href=https://utcc.utoronto.ca/~cks/space/blog/>blog</a> »
+ <a href=https://utcc.utoronto.ca/~cks/space/blog/unix/>unix</a> »
+ V7WhyItMattersSoMuch</span></div>
+ <div class=right>Welcome, guest.</div>
+</div>
+<div id=documentbody>
+<div class=wtblog>
+<div class=maintext> 
+ <div class="wikitext titlehack"><h2>Why V7 Unix matters so much</h2>
+ <div class=posttitle style=opacity:0.6><small>November 21, 2021</small></div>
+</div>
+<div class=wikitext><p>When I talk about things involving the history of Unix, I often
+wind up mentioning V7, also known as <a href=https://en.wikipedia.org/wiki/Version_7_Unix>Seventh Edition</a> of <a href=https://en.wikipedia.org/wiki/Research_Unix>Research Unix</a> from Bell Labs (for
+a recent example, in <a href=https://utcc.utoronto.ca/~cks/space/blog/unix/StackSizeLimitWhen>my entry on when Unix got stack size limits</a>). If you're relatively new to the history of
+Unix, you might wonder why V7 keeps coming up so often. There are
+a number of reasons that V7 matters so much both for the history
+of Unix and for what is what we think of as being 'Unix' and the
+Unix way.</p>
+<p>Unix and C were originally created and developed in the Bell Labs
+Computing Sciences Research Center (CSRC) by various well known
+people like Ken Thompson and Dennis Ritchie. The CSRC's release of
+V7 was a pivotal moment in the history of Unix, as it was both
+widely publicized and relatively widely distributed. This led to a
+number of effects, both practical and of perceptions.</p>
+<p>First, V7 is effectively the common ancestor of various
+strains of Unix since then (this is not quite true for <a href=https://en.wikipedia.org/wiki/PWB/UNIX>PWB</a>, but close enough). Both BSD
+Unix and AT&amp;T Unix (System III and System V) branched off from V7, so
+things in V7 were generally inherited by both of them, while things
+introduced after V7 (in some Unix line) had to make their way back and
+forth and didn't always migrate. This tends to be why I go back to V7
+(and often no further) to see when something was introduced and if it
+was originally common to BSD Unix and System III/System V.</p>
+<p>Second, V7 was where a lot of what we think of as the way Unix and
+C are was established. V7 is where we got the Bourne shell and a
+relatively modern dialect of C, including <a href=https://en.wikipedia.org/wiki/Stdio>stdio</a>; both the V6 shell and C were
+somewhat different, to the point that you couldn't necessarily
+compile V6 programs even on 1980s C compilers (never mind modern
+ones). In fact a lot of 'Unix' comes from V7, and it's probably the
+oldest Research Unix that would feel normal and familiar to us
+today as users of modern Unix.</p>
+<p>(The <a href=https://en.wikipedia.org/wiki/Research_Unix>Wikipedia page on Research Unix</a> has a useful summary
+of what was introduced in what version.)</p>
+<p>V7 was also the most widely publicized version of Unix up until
+that point and probably for a significant while later. The <a href=https://en.wikipedia.org/wiki/Bell_System_Technical_Journal>Bell
+Labs Technical Journal</a>
+published a lot of Unix papers in July and August of 1978, for
+example (this was before V7 was released in January 1979, but the
+papers were about what was in the process of becoming V7). The V7
+documentation was made into a two volume, officially published thing
+in the early 1980s that you could buy in bookstores (well, probably
+only university and technical bookstores), which made it possible
+for people in general to be thoroughly exposed to detailed Unix
+things from V7 (and also to C). This spread the ideas and influence
+of Unix and C even to people who had never used V7.</p>
+<p>(I would like to say that V7 was also widely distributed to
+universities (and to some extent to elsewhere), and was thus where
+people became exposed to Unix, but in practice I don't think this
+was the case. V7 had a relatively narrow time window of only a few
+years before it was supplanted in universities by BSD Unix, partly
+because BSD ran on the much more powerful and capable DEC Vax.)</p>
+<p>A somewhat less pleasant reason to come back to V7 is that it was
+the last significant Unix release from the Bell Labs CSRC. To quite
+a lot of people, this makes V7 the last 'pure' Unix, the one that
+expresses the intentions of the creators of Unix. All other Unixes
+(BSD, System V, <a href=https://utcc.utoronto.ca/~cks/space/blog/linux/LinuxIsAUnix>and Linux</a>) are in some
+sense contaminated by outsiders who did not fully get the Unix
+philosophy. Both BSD Unix and System III/V added and changed things
+which people find objectionable and non-Unixy, so ignoring these
+as 'not in V7 and in the original intentions of Unix' is sometimes
+seen as convenient (even if, in practice, very few people use Unixes
+without these things).</p>
+<p>The corollary is that if something was in V7, you can argue that it's
+probably pretty close to what the creators of Unix thought it should be
+like. This causes people to look at V7 to in some sense see Unix in its
+pure form, before it was contaminated by later people and concerns.</p>
+<p>PS: Even if V7 didn't last very long at many universities, my
+impression is that it often was what got Unix started at them.
+People might not have been quite as enthused about buying Vaxes and
+using BSD Unix if they hadn't had the experience of V7 before it,
+or heard from people who had that experience.</p>
+</div>
+<div class=commenttools>(<a href=https://utcc.utoronto.ca/~cks/space/blog/unix/V7WhyItMattersSoMuch?showcomments#comments>4 comments</a>.)</div>
+ <small>Written on <a href=https://utcc.utoronto.ca/~cks/space/blog/2021/11/21/>21</a> <a href=https://utcc.utoronto.ca/~cks/space/blog/2021/11/>November</a> <a href=https://utcc.utoronto.ca/~cks/space/blog/2021/>2021</a>.</small> <br>
+<table width=100% border=0> 
+<tbody><tr> <td style=padding-right:0.5em width=50%> <table> <tbody><tr> <td> « </td> <td> <a href=https://utcc.utoronto.ca/~cks/space/blog/linux/FairShareComputeImpossible>Linux has no fair-share scheduling that really works for compute servers</a> </td> </tr> </table> </td>
+ <td style="padding-left:0.5em;border-left:1px dotted" width=50%> <table> <tbody><tr> <td> <a href=https://utcc.utoronto.ca/~cks/space/blog/sysadmin/ExploitAvailabilityMatters>Why it matters to us if exploits are available for security issues</a> </td> <td> » </td> </tr> </table> </td> </tr>
+</table>
+</div>
+<div class=sidebar>
+ <div class=readme> <div class=wikitext><p>These are my <a href=https://utcc.utoronto.ca/~cks/space/blog/>WanderingThoughts</a> <br>
+(<a href=https://utcc.utoronto.ca/~cks/space/AboutBlog>About the blog</a>)</p>
+<p><a href=https://utcc.utoronto.ca/~cks/space/blog/__Index>Full index of entries</a> <br>
+<a href=https://utcc.utoronto.ca/~cks/space/blog/__RecentComments>Recent comments</a></p>
+<p>This is part of <a href=https://utcc.utoronto.ca/~cks/space/FrontPage>CSpace</a>, and is written by <a href=https://utcc.utoronto.ca/~cks/space/People/ChrisSiebenmann>ChrisSiebenmann</a>. <br>
+Mastodon: <a href=https://mastodon.social/@cks>@cks</a> <br>
+<strike>Twitter</strike>: <a href=https://twitter.com/thatcks/>@thatcks</a></p>
+<p align=center>* * *</p>
+<p>Categories: <a href=https://utcc.utoronto.ca/~cks/space/blog/links/>links</a>, <a href=https://utcc.utoronto.ca/~cks/space/blog/linux/>linux</a>, <a href=https://utcc.utoronto.ca/~cks/space/blog/programming/>programming</a>, <a href=https://utcc.utoronto.ca/~cks/space/blog/python/>python</a>, <a href=https://utcc.utoronto.ca/~cks/space/blog/snark/>snark</a>, <a href=https://utcc.utoronto.ca/~cks/space/blog/solaris/>solaris</a>, <a href=https://utcc.utoronto.ca/~cks/space/blog/spam/>spam</a>, <a href=https://utcc.utoronto.ca/~cks/space/blog/sysadmin/>sysadmin</a>, <a href=https://utcc.utoronto.ca/~cks/space/blog/tech/>tech</a>, <a href=https://utcc.utoronto.ca/~cks/space/blog/unix/>unix</a>, <a href=https://utcc.utoronto.ca/~cks/space/blog/web/>web</a> <br>
+Also: <a href=https://utcc.utoronto.ca/~cks/space/blog/__Topics>(Sub)topics</a></p>
+<p>This is a <a href=https://utcc.utoronto.ca/~cks/space/dwiki/DWiki>DWiki</a>. <br>
+<a href=https://utcc.utoronto.ca/~cks/space/help/GettingAround>GettingAround</a> <br>
+(<a href=https://utcc.utoronto.ca/~cks/space/help/Help>Help</a>)</p>
+</div> </div>
+<div class=sidesearch style=font-size:small> <form action=/~cks/space/>Search: <input name=search size=15 value></form> </div>
+</div>
+</div>
+ 
+</div>
+<hr> Page tools: <a href=https://utcc.utoronto.ca/~cks/space/blog/unix/V7WhyItMattersSoMuch?source rel=nofollow>View Source</a>, <a href=https://utcc.utoronto.ca/~cks/space/blog/unix/V7WhyItMattersSoMuch?writecomment rel=nofollow>Add Comment</a>. 
+<div class=bottombar>
+ <div class=left><form action=/~cks/space/>Search: <input name=search size=15 value></form></div>
+ <div class=right><form method=post action=/~cks/space/.login>
+Login: <input name=login size=10 value>
+Password: <input type=password name=password size=10 value>
+<input type=submit value=Login></form></div> <div class=clear></div>
+</div>
+<div id=atomfeeds>Atom Syndication: <a type=application/atom+xml href=https://utcc.utoronto.ca/~cks/space/blog/unix/V7WhyItMattersSoMuch?atomcomments rel=nofollow>Recent Comments</a>.</div>
+<hr> Last modified: Sun Nov 21 23:55:37 2021 <br>
+<address>This dinky wiki is brought to you by the Insane Hackers
+Guild, Python sub-branch.</address>

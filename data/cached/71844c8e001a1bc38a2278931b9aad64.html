@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> <html xmlns=http://www.w3.org/1999/xhtml style><!--
+ Page saved with SingleFile 
+ url: https://www.pixelbeat.org/docs/coreutils-testing.html 
+ saved date: Sun Apr 23 2023 14:55:14 GMT+0800 (China Standard Time)
+--><meta charset=utf-8><title>How the GNU coreutils are tested</title>
+<meta name=keywords content="coreutils unix utilities testing">
+<meta name=description content="Tools and techniques used to test coreutils">
+<link rel=author href=https://www.pixelbeat.org/contact.html>
+<link rel=alternate type=application/rss+xml title=www.pixelbeat.org href=https://www.pixelbeat.org/feed/rss2.xml>
+<style>acronym{font-variant:normal;border-bottom:1px dotted}acronym:hover{cursor:help}q{font-style:italic}kbd{padding:0px 1px 0px 1px;margin:0px 1px 0px 0px;background-color:rgb(255,255,192);border-top:1px solid rgb(255,255,64);border-left:1px solid rgb(255,255,64);border-right:2px solid rgb(180,200,86);border-bottom:2px solid rgb(180,200,86);font-size:85%}h1{padding:6px 0px 16px 0px;margin:0px 0px 0px 0px}h2{padding:16px 0px 6px 0px;margin:0px 0px 0px 0px}h3{padding:10px 0px 2px 0px;margin:0px 0px 0px 0px}font.snippet{font-size:90%;background-color:rgb(255,255,192);border:1px dotted rgb(180,200,86);padding:0px 2px 0px 2px}pre.snippet{font-size:100%;background-color:rgb(255,255,192);border:1px dotted rgb(180,200,86);text-align:left;padding:3px;width:50em}pre.snippet font.comment{color:rgb(180,200,86)}pre.snippet .hl{background-color:#000000;color:rgb(255,255,192)}pre.shell{color:#bbbbbb;background-color:#000000;border:1px solid;margin:15px 0px 15px 0px;text-indent:0;text-align:left;padding:3px;width:50em}pre.shell font.comment{color:rgb(128,128,128)}pre.shell font.so{color:yellow}.shrink{width:auto!important;display:table-cell}pre.shell .hl{background-color:#bbbbbb;color:#000000}.monospace{font-family:monospace;white-space:pre}.nw{white-space:nowrap}.fw{width:100%}a{text-decoration:none;outline-style:none}a:hover{text-decoration:underline}img{border-style:none}a.blog{background-color:rgb(180,200,86);border:1px solid;font-size:75%}pre.shell a{color:rgb(128,128,255)}pre.shell b{color:rgb(255,255,255);font-weight:normal}table.pixelbeat{margin:2px 0 1px 0;border-width:0 0 1px 1px;border-spacing:0;border-color:rgb(192,255,192);border-style:solid;background-color:rgb(255,255,192);border-collapse:collapse}table.pixelbeat td{padding:0px 1px 0px 2px;border-width:1px 1px 0 0;border-color:rgb(192,255,192);border-style:solid}tr.pbtitle,td.pbtitle{background-color:rgb(180,220,100)}.dark{color:rgb(180,200,86)!important}.darkbg{background-color:rgb(180,200,86)!important}.medium{color:rgb(180,220,100)!important}.mediumbg{background-color:rgb(180,220,100)!important}.icon{padding:2px 3px 1px 3px;margin:0;text-align:center;font-family:Tahoma,Verdana,Arial,sans-serif;font-weight:bold;color:#fff;border:1px solid;cursor:pointer}.blue{background-color:#1845CC;border-color:#c3cde8 #000033 #000033 #c3cde8}.orange{background-color:#ff8000;border-color:#ffc8a4 #3f1a01 #3f1a01 #ffc8a4}.preload{display:none}.score.dislikes,.score.likes,.reddit-header{display:none!important}.reddit-voting-arrows{display:none!important}.rembeddit-content{margin-top:5px}.reddit-entry{padding:0px 9px 10px;9px;}.rembeddit{border:1px solid rgb(180,220,100);background-color:rgb(255,255,192);max-width:30em}.rembeddit small{color:gray}.rembeddit a{text-decoration:none}#cse{padding:0px 3px 0px 3px;border:1px solid rgb(180,220,100);border-top:none;background-color:rgb(255,255,192)}#cse .gs-title{text-decoration:none}#cse .gs-webResult .gs-visibleUrl-short{display:none}#cse .gsc-branding{display:none}#___plusone_0{vertical-align:bottom!important}</style>
+<style media="screen, projection">head{display:block;position:relative;z-index:-2}head>title{display:block;font-size:x-large;font-weight:bold;font-family:Verdana,Arial,sans-serif;text-align:center;color:#222}body{margin:0em;padding:0em;color:#222}.invisible{display:none}#sidebar{top:0;float:left;position:absolute!important;width:9em;color:black;z-index:-1}#header,#menu,.dynamenu{top:0;right:100%;width:9em;background:rgb(255,255,192);color:black;z-index:0}#header{border-bottom:1px solid rgb(180,200,86);height:24px}#hnav{height:24px;width:96px;background:url(data:image/png;base64,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)no-repeat center;padding:0;margin:auto;position:relative}#hnav li{margin:0;padding:0;list-style:none;position:absolute;top:0}#hnav li,#hnav a{height:24px;display:block}#p1{left:0;width:24px}#p2{left:25px;width:24px}#p3{left:50px;width:24px}#p4{left:75px;width:24px}#adds{height:100%;width:9em;z-index:0;overflow:hidden}#footer{position:absolute;bottom:0;left:0;width:9em;background:rgb(255,255,192);color:black;z-index:1}body>#sidebar{position:fixed}#content{margin:auto;height:100%;margin-top:24px;padding:1em;padding-top:0;font-family:Verdana,Arial,sans-serif;font-size:small;max-width:68em;width:auto;text-align:justify}#menu a,#footer a{display:block;text-decoration:none;text-align:left;padding-top:0.5em;padding-bottom:0.5em;padding-left:0.3em;padding-right:0.2em;background:rgb(180,200,86) none;color:rgb(255,255,192);font-weight:bold;font-size:small;font-family:Verdana,Arial,sans-serif;margin-bottom:1px}#menu a:hover,#footer a:hover{background:rgb(180,220,100) none;color:black}</style>
+<style media=print>.title{width:100%;margin:1cm;padding:0cm;z-index:0}#sidebar{display:none}.noprint{display:none}.contentText{padding:0.5cm;margin-top:0.5cm;margin-right:0cm;margin-left:0cm}</style>
+<style media=screen>@media only screen and (max-device-width:768px){#content{margin-left:0;max-width:none;font-size:120%}}@media only screen and (max-device-width:480px){#content{margin-left:0;max-width:none;font-size:140%}}@media only screen and (max-device-width:320px){#content{margin-left:0;max-width:none;font-size:160%}}</style>
+<!--[if IE 6]>
+<link rel="stylesheet" href="/IE6hack.css" type="text/css" media="screen, projection"/>
+<![endif]-->
+<link rel="shortcut icon" type=image/x-icon href=data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/AAAAAAD/AAD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMzMzMzMzMzMxEzMzMzMzMzETMzMzMzMzMRMzMzMzMzMxEzMzMzMzMzESIAMxEiADMRIgAzESIAMxEiADMRIgAzESIAMxEiADMRIgAzESIAMxEiADMRIgAzMzMzMxEzMzMzMzMzETMzMzMzMzMRMzMzMzMzMxEzMzMzMzMzMzMzP//wAAn/8AAJ//AACf/wAAn/8AAIGBAACBgQAAgYEAAIGBAACBgQAAgYEAAP+fAAD/nwAA/58AAP+fAAD//wAA><style>.sf-hidden{display:none!important}</style><link rel=canonical href=https://www.pixelbeat.org/docs/coreutils-testing.html><meta http-equiv=content-security-policy content="default-src 'none'; font-src 'self' data:; img-src 'self' data:; style-src 'unsafe-inline'; media-src 'self' data:; script-src 'unsafe-inline' data:; object-src 'self' data:; frame-src 'self' data:;"><style>img[src="data:,"],source[src="data:,"]{display:none!important}</style></head>
+<body>
+ <div id=content style=max-width:50em>
+ <div class=contentText>
+Detailed here are some of the tools and techniques we use to test
+the <a href=https://www.gnu.org/software/coreutils>GNU coreutils project</a>,
+which should present some useful ways to automate the use of tools like
+<a href=#gdb>gdb</a>, <a href=#strace>strace</a>, <a href=#valgrind>valgrind</a>, sed, grep, or the coreutils themselves etc.,
+either for testing or for other applications. We also describe
+general techniques like using timeouts in a robust and performant way.
+<h2 id=framework>Test framework</h2>
+<a href=https://www.gnu.org/software/automake/manual/html_node/Tests.html#Tests>automake's test framework</a>
+is used, including "color-tests" and "parallel-tests",
+which supports running generic test scripts.
+Our test scripts are generally <b>shell scripts</b>, which makes a lot of sense
+since the coreutils themselves are designed to be used from shell,
+and therefore we get a lot of secondary testing from the ancillary operations
+to the primary commands being tested in each script.
+<p>
+Generally one invokes the test suite with <font class=snippet>make check</font>,
+either when developing or after the build step when building coreutils for your system.
+You can also run individual tests when debugging/developing like<br>
+<font class=snippet>make TESTS=path/to/test/script <a href=#gnulib>SUBDIRS=.</a> VERBOSE=yes check</font> etc.
+</p>
+<p>Note the GNU coreutils test suite is useful independently from the coreutils project
+(with some caveats), since the utilities under test are identified using the $PATH.
+That allows one to swap in other implementations of these utilities,
+to test conformity to the GNU coreutils implementation.</p>
+<h2 id=performance>Performance</h2>
+It's important to have a test suite that runs in a reasonable amount of time
+to increase the chances of tests being run and that they don't impact
+developer flow too much. To that end we support running tests in parallel,
+and also categorize tests to "EXPENSIVE" and "VERY_EXPENSIVE" which are
+not normally run.
+<p>Parallel testing neatly leverages make's parallel support and
+is enabled with <font class=snippet>make -j $(nproc) check</font>.
+One just has to be wary to split large tests to more granular ones.
+Note <font class=snippet>$(nproc)</font> is about the right level of
+parallelism for these tests, with diminishing returns beyond that.
+Current performance and test counts on a <b>40 core</b> system are:
+<pre class=shell>$ nproc
+<b>40</b>
+$ time make -j $(nproc) check <a href=#gnulib>SUBDIRS=.</a>
+<b>13s</b>
+ # TOTAL: 590
+ # PASS:  483
+ # SKIP:  107
+</pre>
+<pre class=shell># time make -j $(nproc) check
+<b>21s</b> including these additional <a href=#gnulib>gnulib</a> tests
+ # TOTAL: 311
+ # PASS:  292
+ # SKIP:  19
+</pre>
+<pre class=shell># time make -j $(nproc) check RUN_EXPENSIVE_TESTS=yes
+<b>1m22.244s</b> for 9 extra expensive tests
+# time make -j $(nproc) check \
+  RUN_EXPENSIVE_TESTS=yes RUN_VERY_EXPENSIVE_TESTS=yes
+<b>6m2.051s</b> for 10 extra very expensive tests
+ # SKIP:  55
+</pre>
+To maintain accuracy and reliability in these tests
+at this level of performance can be tricky,
+and we detail various techniques below to achieve that.
+<h3 id=backoff>Truncated exponential backoff</h3>
+It can be quite tricky to test asynchronous code without introducing large
+delays that slow down the test suite. A very useful technique we've used
+to avoid that is through the use of the
+<a href="http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=v8.5-149-gc52d220">retry_delay_</a>
+function, which tries an operation with an initial small timeout which usually suffices,
+but if not, will retry the operation with an increasing timeout.
+<p>
+<i>retry_delay_</i> is used for operations that require a delay to <i>pass</i>.
+For operations that <i>fail</i> after a timeout, i.e. tests that are protected
+against hanging, we use the <a href=http://www.gnu.org/software/coreutils/timeout>timeout</a> command
+with a value of <a href="http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=dd2253f">10s</a>,
+before a test is failed.
+</p>
+<h2 id=responsiveness>Responsive idempotence</h2>
+This is the idea that you can run without stateful side effects on the system,
+and that you can kill the run within a reasonable amount of time also without side effects.
+<p>Each test runs in its own directory, which is removed when finished.
+SIGINT, and SIGTERM are handled appropriately so the clean up happens
+for Ctrl-C or if the test suite is otherwise terminated.
+Sometimes we need to take explicit action to be responsive to Ctrl-C.
+For example one very expensive sort(1) test
+<a href="http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=dd2253f">uses timeout --foreground to be responsive</a>.
+Also in some cases we need to be careful to <i>not</i> be too responsive to signals,
+like where we disable SIGTTOU for some tests, or
+<a href="http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=5669986">disable suspension</a>
+in isolated cases to avoid false positive failures due to timeouts.
+</p>
+For asynchronous tests we need to
+<a href="http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=9069f4e">explicitly cleanup background processes</a>
+so that
+<ul style=padding-left:2em;margin-top:0>
+<li>Stray processes aren't left on the system
+<li>Files aren't held open causing "silly rename" deletion issues on NFS
+<li>Partitions used to run the tests from can be unmounted
+</ul>
+<p>
+Handling asynchronous cases is generally tricky; for example when fixing a
+<a href="http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=v8.20-115-g71ab11e">subtle test race</a>
+we also noticed
+<a href=https://lists.gnu.org/archive/html/bug-bash/2013-02/msg00020.html>a race in bash</a> which was subsequently fixed.
+</p>
+<p id=rm-root>
+Generally any of these tests have the potential to cause side effects on the system,
+but some are downright scary and dangerous. For example the
+<a href=https://github.com/coreutils/coreutils/blob/master/tests/rm/r-root.sh>
+<font class=snippet>rm --no-preserve-root -r '/'</font> test</a>,
+is worth reviewing to see the many protections and techniques in place there,
+including chickening out entirely if running as root,
+<a href=#gdb>using gdb</a> to limit calls to unlink(), and
+also <a href=#LD_PRELOAD>using LD_PRELOAD</a> to verify and limit calls.
+<h2 id=system-tools>System tools</h2>
+<p>
+<b>loopback mounts</b> are used to test various file systems,
+given the focus of coreutils on files (having assimilated the fileutils project),
+and the general <a href=https://www.pixelbeat.org/talks/linux_and_python/page13.html>file abstraction</a> of UNIX itself.
+We use generated file systems to ensure extents are supported,
+or to test global SELinux mount options for example.
+</p>
+<p><b>/dev/full</b> is a very useful device to simulate a full file system,
+and returns ENOSPC for any system call that might return that.
+In my experience with general system flakiness with a real full file system,
+lots of software could do with testing with this device.
+</p>
+<p id=LD_PRELOAD><b>LD_PRELOAD wrappers</b> are a handy technique to replace
+functionality in shared library routines. We take the simpler
+approach of limiting building our shared library wrappers to
+<a href=https://github.com/coreutils/coreutils/blob/25c7c0db/init.cfg#L590-L598>gcc with particular options</a>,
+as there is a large disparity between shared library details
+on various systems, as indicated by the complexity of libtool for example.
+We use wrappers for example, to provide <a href=#rm-root>protection</a> for dangerous syscalls, or to
+<a href=https://github.com/coreutils/coreutils/blob/25c7c0db/tests/rm/rm-readdir-fail.sh>simulate partial failure</a>.
+Note sometimes <a href=https://github.com/coreutils/coreutils/blob/25c7c0db/tests/rm/rm-readdir-fail.sh#L30-L33>special care</a> is needed to support both 32bit and 64bit systems.
+</p>
+<p id=gdb>
+<b>gdb</b> can be quite awkward to automate robustly, but we use it
+in a couple of places to verify a fix for a race by
+<a href=https://github.com/coreutils/coreutils/blob/25c7c0db/tests/tail-2/inotify-race.sh>running shell script at a breakpoint</a>,
+or to provide <a href=#rm-root>protection</a> by limiting dangerous system calls by
+<a href=https://github.com/coreutils/coreutils/blob/25c7c0db/tests/rm/r-root.sh>python scripting at a breakpoint</a>.
+Note because of inlining, breakpoints must be set on a line rather than a routine,
+noting that some systems provide both
+<a href="http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=v8.21-185-g0427808">inline and non-inline functions</a>
+in the same binary, so setting a breakpoint doesn't necessarily mean that it will be hit.
+Note also we avoid sending signals directly to gdb due do
+<a href="http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=v8.23-186-gfe02153">its SIGTERM and SIGCONT handling</a>.
+</p>
+<p id=strace>
+<b>strace</b> is used to <a href=https://github.com/coreutils/coreutils/blob/25c7c0db/tests/ls/stat-free-color.sh>check a syscall is not called</a> and
+<a href=https://github.com/coreutils/coreutils/blob/25c7c0db/tests/tail-2/inotify-rotate-resources.sh>synchronize operation on a syscall</a>.
+</p>
+<p>
+<b>glibc</b> has a feature to return "random" data for heap allocations
+which helps detect heap issues that would otherwise be undetected
+due to the allocated memory often being zero by default.
+That's enabled though setting the <font class=snippet>MALLOC_PERTURB_</font> environment variable.
+</p>
+<p id=valgrind>
+<b>valgrind</b> is an amazing tool and before release we
+<a href=https://github.com/coreutils/coreutils/blob/25c7c0db/READMe-valgrind>run all utilities with valgrind</a>.
+More often we use a more performant and integrated subset of these tests
+by enabling <acronym title=AddressSanitizer>ASAN</acronym> in the build.
+Some tests use valgrind explicitly, when verifying specific memory corruption fixes, or to explicitly
+<a href=https://github.com/coreutils/coreutils/blob/25c7c0db/tests/misc/shuf-reservoir.sh>ensure no memory leaks</a>.
+Note the leak checking needs to set an appropriate <font class=snippet>--leak-check</font> level
+depending on whether we're doing a development build which deallocates memory in more cases,
+or a standard build which avoids redundant deallocations right before the process terminates.
+</p>
+<p>
+<b>chroot</b> is part of coreutils so we both test this tool
+and use it to test others under particular user credentials.
+There are various commands to set an effective user id, but we use
+<font class=snippet>chroot --userspec</font> to provide and implicitly test that functionality.
+Previously we had used a non installed wrapper to provide this, but implemented
+it within chroot to avoid that maintenance overhead, and provide this useful functionality more generally.
+</p>
+<p>
+<b>ulimit</b> is used to run tests under constrained memory conditions,
+and we've support for <a href=https://github.com/coreutils/coreutils/blob/25c7c0db/init.cfg#L190-L220>determining the base memory limit</a>
+for a command, which is then used to set the appropriate memory limits with ulimit for the commands under test.
+That allows us to set both tight and robust limits.
+</p>
+<h2 id=portability>Portability</h2>
+The GNU coreutils support a large variety of systems,
+with the differences between them often being handled transparently
+by the <a href=https://www.gnu.org/software/gnulib/>gnulib project</a>.
+<br>
+<br>
+Still in certain cases we need to skip (parts of) tests, like:
+<ul style=padding-left:2em;margin-top:0>
+<li>skip <a href=https://github.com/coreutils/coreutils/blob/25c7c0db/init.cfg#L82-L86>remote file systems</a> due to performance/functionality</li>
+<li>skip when the binary is <a href=https://github.com/coreutils/coreutils/blob/25c7c0db/init.cfg#L709>configured not to be built</a></li>
+<li>skip when the feature is indicated not <a href=https://github.com/coreutils/coreutils/blob/25c7c0db/tests/cp/acl.sh#L25-L27>available in config.h</a></li>
+</ul>
+Other portability considerations are:
+<ul style=padding-left:2em;margin-top:0>
+<li>We automatically pick a shell with sufficient support for the test suite,
+through the use of the <a href=https://github.com/coreutils/gnulib/blob/master/m4/posix-shell.m4>gnulib posix-shell module</a>,
+and some other <a href=https://github.com/coreutils/coreutils/blob/25c7c0db/tests/init.sh#L120-L243>shell compatibility checks</a>.
+Also if explicitly calling a subshell we do so through the <a href="http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=v8.23-248-g1d4289b">$SHELL</a> variable.</li>
+<li>Ensure we avoid shell builtins through the use of the <font class=snippet>env</font> utility</li>
+<li>Various file system variations, like GPFS having a
+ <a href="http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=v8.24-167-gf0dc5ec">large st_blksize</a>,<br>
+ or <a href="http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=v8.22-65-g7c03fe2">avoiding</a>
+ <a href="http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=v8.23-28-ged0c3c3">speculative preallocation</a>
+ on XFS etc.</li>
+<li>Various <a href=https://www.pixelbeat.org/programming/shell_script_mistakes.html#portability>shell portability</a> issues, like
+ avoiding <font class=snippet>:&gt;file</font> to touch files due to <a href="http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=v8.22-35-g056d6de">various issues</a>.<br>
+ Also avoiding <font class=snippet>$(&lt; file)</font> to read files which breaks with dash.</li>
+</ul>
+<h3 id=pretest>pretest VMs</h3>
+An excellent resource for portability testing for any project are the
+<a href=http://www.nongnu.org/pretest/>pretest VMs</a>
+which provide easy to use virtual machine images for
+testing various free software GNU/Linux and BSD distros etc.
+There is even a GUI helper there to generate the appropriate
+qemu or libvirt commands to run the VMs.
+<h2 id=coverage>Coverage</h2>
+Coverage is slowly increasing over time which is good, though could be improved.
+<font class=snippet>make coverage</font> currently reports:
+<pre class=snippet>lines......: 81.3% (42913 of 52795 lines)
+functions..: 89.2% (2293 of 2571 functions)
+</pre>
+<a href=http://www.opencoverage.net/coreutils>Open Coverage results</a> show <b>branch</b> coverage rather than line coverage,
+and indicate a significantly lower coverage of 44.7%.
+Note while we're looking to increase these numbers, we're concentrating on testing
+the minimal amount of code being changed/added, noting that other techniques like
+fuzz testing are used by ourselves and others to augment test coverage.
+<h2 id=syntax-check>Syntax checks</h2>
+These are higher level checks run with <font class=snippet>make syntax-check</font>
+that generally operate on the code, rather than on the binaries as `make check` does.
+Note this also means they're targeted at developers and so can use newer tools
+and have less portability constraints than other make targets and tests.
+Currently there are 153 tests which run in 8 seconds on an older 4 core system.
+<br>
+<br>
+Some tests are general enough to be <a href=https://github.com/coreutils/gnulib/blob/master/top/maint.mk>shared in gnulib</a> to all projects, like:
+<ul style=padding-left:2em;margin-top:0>
+<li><a href=https://github.com/coreutils/gnulib/blob/94386a13/top/maint.mk#L1573-L1674>tight_scope</a> ensures items aren't exported from C modules unless needed</li>
+<li><a href=https://github.com/coreutils/gnulib/blob/94386a13/top/maint.mk#L729-L746>require_test_exit_idiom</a> ensures test shell scripts exit robustly</li>
+<li><a href=https://github.com/coreutils/gnulib/blob/94386a13/top/maint.mk#L346-L349>space_tab</a> maintains spacing by disallowing a TAB to follow a SPACE</li>
+<li>...</li>
+</ul>
+Types of coreutils specific syntax checks include:
+<ul style=padding-left:2em;margin-top:0>
+<li><a href=https://github.com/coreutils/coreutils/blob/25c7c0db/cfg.mk#L794-L798>prohibit-form-feed</a> to enforce layout style</li>
+<li><a href=https://github.com/coreutils/coreutils/blob/25c7c0db/cfg.mk#L301-L310>prohibit-c99-printf-format</a> for runtime portability not handled by gnulib</li>
+<li><a href=https://github.com/coreutils/coreutils/blob/25c7c0db/cfg.mk#L190-L199>error_quotes</a> enforcing runtime error format</li>
+<li><a href=https://github.com/coreutils/coreutils/blob/25c7c0db/cfg.mk#L617-L622>prohibit_test_background_without_cleanup_</a> ensuring test robustness</li>
+<li>...</li>
+</ul>
+<h2 id=third-party>Third-party testing</h2>
+Given the ubiquity, compartmentalized nature, and test robustness of the GNU coreutils,
+others have used coreutils to exercise their own, often very sophisticated, test frameworks.
+We're very appreciative of these efforts which have found bugs both new and old.
+<p>We received <a href="https://debbugs.gnu.org/cgi/bugreport.cgi?bug=24903#25">bug reports for tail(1)</a>
+from <a href=https://github.com/COMSYS/SymbolicLivenessAnalysis>symbolic liveness analysis</a> (a extension to KLEE (symbolic execution analysis)),
+from Aachen University. This was interesting as it extended KLEE to automatically find unintended non-termination
+of programs, for which it found two cases in tail(1).
+[Update Sep 2018: The is work is now <a href=https://link.springer.com/chapter/10.1007/978-3-319-96142-2_27>published</a>].
+</p>
+<p>
+An encouraging trend brought to fore
+recently with the release of <a href=http://lcamtuf.coredump.cx/afl/>AFL</a>,
+is the increased use of fuzz testing. AFL was used to find a TZ
+parsing bug in
+<a href="http://git.savannah.gnu.org/gitweb/?p=gnulib.git;a=commitdiff;h=94e01571">date</a>
+for example. The related
+<a href=https://github.com/mboehme/aflfast>AFLFast</a> project was used to catch bugs in
+<a href=http://bugs.gnu.org/25003>split</a>,
+<a href=http://bugs.gnu.org/25023>pr</a>, and
+<a href=http://bugs.gnu.org/25041>tac and tail</a>,
+with the split bug being caught before it landed in an official release!
+Note <a href=#ASAN>ASAN and UBSAN</a> are symbiotic with the use of fuzz testing
+(used essentially to improve test coverage), so we keep the coreutils project
+ASAN/UBSAN clean.
+</p>
+<p>Previously the <i>AFLFast</i> author Marcel Böhme used
+<a href=ihttp://www.comp.nus.edu.sg/~mboehme/paper/FSE13.pdf>Regression Tests to Expose Change Interaction Errors</a>
+to find a <a href=http://bugs.gnu.org/13627>bug in cut</a> before it landed in an official release.
+This method produced a "change sequence graph" for the two versions under consideration,
+and identified problematic differences between the two.</p>
+<h2 id=misc>Miscellaneous notes</h2>
+<ul style=padding-left:2em;margin-top:0>
+<li><b>Helper utilities</b> are used in a few cases though
+best avoided like we did in the chroot --userspec case above.
+Also we prefer to use scripting where available to ease maintenance,
+like with the <a href=https://github.com/coreutils/coreutils/blob/master/tests/d_type-check>python d_type checks</a> for example,
+which use python to call directly into C level routines.
+A useful compiled tool we do use is <a href=https://github.com/coreutils/coreutils/blob/master/src/getlimits.c>getlimits</a>,
+which outputs a list of <b>compile time</b> constants which are
+then consumed by shell or perl scripts for the common task of
+testing tools with these limits. Because it's only accurate at compile time,
+we don't release this tool generally.</li>
+<li><b>Helper shell functions</b> are used extensively.
+For example we use the <a href=https://github.com/coreutils/coreutils/blob/25c7c0db/tests/init.sh#L99-L118>returns_</a> function
+to make the construct <font class=snippet>command &amp;&amp; fail=1</font> more concise,
+but more importantly more robust against crashes, since we're checking for
+a specific return code, and this not silently hiding crashes,
+which may occur at any time, but especially with process abort() due to ASAN failure etc.</li>
+<li><b>Useful logs</b> are supported by enabling <font class=snippet>set -x</font> to trace
+the test script executing with <font class=snippet>make check VERBOSE=yes</font>.
+But note we must be careful to avoid such tracing in wrappers that might
+adversely effect error comparisons, like in the case of the <font class=snippet>returns_</font>
+function above. We use braces to avoid the catch 22 of tracing the command to disable tracing.
+Other log conscious techniques are using the <font class=snippet>compare</font>
+function to ensure a file is empty, so that the file contents are logged on failure.</li>
+<li id=ASAN><b>Runtime program analysis</b> really benefits from a robust
+existing test suite to run a significant amount of your code
+through the various runtime verification tools like <a href=#valgrind>valgrind</a>
+(including <a href="http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=v8.22-146-gfe08796">helgrind/drd thread checks</a>),
+and GCC/clang's
+<a href=https://clang.llvm.org/docs/AddressSanitizer.html>ASAN</a> and
+<a href=https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html>UBSAN</a> modes.
+Note coreutils is currently ASAN and UBSAN clean when running the test suite.</li>
+<li id=gnulib>
+<b>gnulib tests</b> are bundled together with coreutils',
+and are generally written in C given their lower level nature.
+The <font class=snippet>SUBDIR</font> parameter in
+<font class=snippet>make SUBDIRS=. check</font> will skip gnulib's
+tests and run only the coreutils ones, while omitting that
+parameter will run all tests.
+Gnulib's tests are maintained independently of coreutils. To learn more, see this
+discussion on
+<a href=http://bug-gnulib.gnu.narkive.com/mqMuiXg7/running-tests-as-a-gnulib-developer#post2>running tests as a gnulib developer</a>.
+</li>
+</ul>
+<h2>TODO:</h2>
+The coreutils tests are by no means perfect, and
+would benefit from improvements in a few areas:
+<ul style=padding-left:2em;margin-top:0>
+<li>improved <a href=#coverage>coverage</a></li>
+<li>improved mocking of file system details with a
+fuse file system emulator along the lines of <a href=http://freecode.com/projects/petardfs>petardfs</a>
+and <a href=http://www.scylladb.com/2016/02/16/fault-injection-filesystem-software-testing/>CharybdeFS</a></li>
+<li>a more general C library mocking system along the lines of <a href=https://cmocka.org/>cmocka</a></li>
+<li>The addition of more of our test matrix to our <a href=http://hydra.nixos.org/jobset/gnu/coreutils-master>continuous testing system</a>,
+like "root user", <a href=#pretest>more platforms</a>, different shells,
+with and without tty, <acronym title="build separate to source directory">VPATH build</acronym>, ...</li>
+</ul>
+ 
+ <div style=color:gray;padding-top:1em;padding-bottom:.5em;width:728px>
+ 
+ <span style=text-align:left><a href=http://creativecommons.org/licenses/by-sa/3.0/ rel=license>©</a> Jan 23 2017</span>
+ <span class=noprint>
+ <div style=padding-top:1em;font-size:120%;font-weight:bold><a>Comments...</a></div>
+ </span>
+ </div>
+ <div class=noprint id=linkunits style=padding-top:1em;display:none>
+ 
+ </div>
+ 
+ </div>
+</div>
+<div id=sidebar>
+<div id=header>
+ <ul id=hnav>
+ <li id=p1><a href=https://www.pixelbeat.org/ rel=me></a></li>
+ <li id=p2><a href=mailto:P@draigBrady.com></a></li>
+ <li id=p3><a href=https://twitter.com/pixelbeat_></a></li>
+ <li id=p4><a href=https://www.pixelbeat.org/feed/rss2.xml></a></li>
+ </ul>
+</div>
+<table width=100% height=100% cellspacing=0 cellpadding=0>
+<tbody><tr><td align=center>
+<!--[if IE]>
+<!-- IE specific content -->
+</tr>
+</table>
+<div id=footer>
+</div>
+</div>
